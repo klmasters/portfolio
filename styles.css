@@ -1,0 +1,197 @@
+/* =============================================================
+   KENNAN MASTERS — PORTFOLIO
+   Shared stylesheet for all pages.
+
+   TO CHANGE COLORS: edit the :root block below.
+   Every color used across the site is defined here.
+   ============================================================= */
+
+/* ── COLORS ── */
+:root {
+  --soil:      #1c2e1f;
+  --bark:      #2e4d31;
+  --leather:   #3d6642;
+  --clay:      #c96a2e;
+  --wheat:     #dde8d8;
+  --parchment: #edf2eb;
+  --cream:     #faf9f4;
+  --sage:      #5a7a5d;
+  --sage-dark: #3a5c3d;
+  --rust:      #e8843e;
+  --sky:       #6b8fa3;
+}
+
+/* ── RESET ── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* ── BASE ── */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--cream);
+  color: var(--soil);
+  font-family: 'DM Sans', sans-serif;
+  font-weight: 300;
+  line-height: 1.7;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 3rem;
+  background: rgba(250, 249, 244, 0.88);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(61, 102, 66, 0.15);
+}
+
+.nav-logo {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 300;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--leather);
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 2.5rem;
+  list-style: none;
+}
+
+.nav-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--bark);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  color: var(--rust);
+}
+
+/* ── BUTTONS ── */
+.btn-primary {
+  display: inline-block;
+  padding: 0.9rem 2rem;
+  background: var(--soil);
+  color: var(--wheat);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.btn-primary:hover {
+  background: var(--bark);
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  display: inline-block;
+  padding: 0.9rem 2rem;
+  border: 1.5px solid var(--leather);
+  color: var(--leather);
+  font-family: 'DM Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.btn-secondary:hover {
+  background: var(--leather);
+  color: var(--cream);
+  transform: translateY(-2px);
+}
+
+/* ── SECTION LABELS (shared across pages) ── */
+.section-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--sage);
+  margin-bottom: 1rem;
+}
+
+.section-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2rem, 3.5vw, 3rem);
+  font-weight: 700;
+  color: var(--soil);
+  margin-bottom: 4rem;
+  max-width: 20ch;
+}
+
+/* ── FOOTER ── */
+footer {
+  padding: 3rem 6rem;
+  background: var(--bark);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer-name {
+  font-family: 'Playfair Display', serif;
+  font-size: 1rem;
+  color: var(--wheat);
+}
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.footer-links a {
+  font-family: 'DM Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--clay);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover {
+  color: var(--wheat);
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+/* ── RESPONSIVE — shared ── */
+@media (max-width: 900px) {
+  nav { padding: 1rem 1.5rem; }
+  .nav-links { gap: 1.5rem; }
+  footer { flex-direction: column; gap: 1.5rem; padding: 2rem; text-align: center; }
+}

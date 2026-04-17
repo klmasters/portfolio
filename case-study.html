@@ -7,70 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --soil:      #2c1f14;
-      --bark:      #4a3728;
-      --leather:   #8b5e3c;
-      --clay:      #c4895f;
-      --wheat:     #e8d5b0;
-      --parchment: #f5edd8;
-      --cream:     #faf6ee;
-      --sage:      #7a8c6e;
-      --sage-dark: #4e5c44;
-      --rust:      #a63d2f;
-      --sky:       #6b8fa3;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--cream);
-      color: var(--soil);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      line-height: 1.7;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.25rem 3rem;
-      background: rgba(250, 246, 238, 0.88);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(139, 94, 60, 0.15);
-    }
-
-    .nav-logo {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.8rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--leather);
-      text-decoration: none;
-    }
-
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-
-    .nav-links a {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--bark);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active { color: var(--rust); }
 
     /* ── PAGE HEADER ── */
     .page-header {
@@ -84,7 +22,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30 Q15 10 30 30 T60 30' fill='none' stroke='%234a3728' stroke-width='1'/%3E%3C/svg%3E") repeat;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30 Q15 10 30 30 T60 30' fill='none' stroke='%232e4d31' stroke-width='1'/%3E%3C/svg%3E") repeat;
       opacity: 0.3;
     }
 
@@ -132,13 +70,7 @@
       margin-bottom: 3rem;
     }
 
-    .header-meta {
-      display: flex;
-      gap: 3rem;
-      flex-wrap: wrap;
-    }
-
-    .meta-item {}
+    .header-meta { display: flex; gap: 3rem; flex-wrap: wrap; }
 
     .meta-label {
       font-family: 'DM Mono', monospace;
@@ -149,17 +81,10 @@
       margin-bottom: 0.25rem;
     }
 
-    .meta-value {
-      font-size: 0.9rem;
-      color: var(--wheat);
-    }
+    .meta-value { font-size: 0.9rem; color: var(--wheat); }
 
     /* ── CONTENT LAYOUT ── */
-    .content-wrap {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 3rem;
-    }
+    .content-wrap { max-width: 1100px; margin: 0 auto; padding: 0 3rem; }
 
     /* ── PROBLEM ── */
     .section-problem {
@@ -170,8 +95,6 @@
       border-bottom: 1px solid var(--wheat);
     }
 
-    .section-sidebar {}
-
     .section-number {
       font-family: 'Playfair Display', serif;
       font-size: 5rem;
@@ -179,14 +102,6 @@
       color: var(--wheat);
       line-height: 1;
       margin-bottom: 0.5rem;
-    }
-
-    .section-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--sage);
     }
 
     .section-body h2 {
@@ -205,13 +120,7 @@
       max-width: 65ch;
     }
 
-    .constraint-list {
-      list-style: none;
-      margin-top: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
+    .constraint-list { list-style: none; margin-top: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem; }
 
     .constraint-list li {
       display: flex;
@@ -229,15 +138,8 @@
       margin-top: 0.1rem;
     }
 
-    /* ── PIPELINE DIAGRAM ── */
-    .section-pipeline {
-      padding: 6rem 0;
-      border-bottom: 1px solid var(--wheat);
-    }
-
-    .section-pipeline .section-label {
-      margin-bottom: 0.5rem;
-    }
+    /* ── PIPELINE ── */
+    .section-pipeline { padding: 6rem 0; border-bottom: 1px solid var(--wheat); }
 
     .section-pipeline h2 {
       font-family: 'Playfair Display', serif;
@@ -280,10 +182,7 @@
 
     .pipeline-step:last-child::after { display: none; }
 
-    .step-icon {
-      font-size: 1.8rem;
-      margin-bottom: 1rem;
-    }
+    .step-icon { font-size: 1.8rem; margin-bottom: 1rem; }
 
     .step-tool {
       font-family: 'DM Mono', monospace;
@@ -302,30 +201,17 @@
       margin-bottom: 0.5rem;
     }
 
-    .step-desc {
-      font-size: 0.8rem;
-      color: var(--bark);
-      opacity: 0.85;
-      line-height: 1.5;
-    }
+    .step-desc { font-size: 0.8rem; color: var(--bark); opacity: 0.85; line-height: 1.5; }
 
-    .pipeline-desc {
-      font-size: 1rem;
-      color: var(--bark);
-      max-width: 65ch;
-    }
+    .pipeline-desc { font-size: 1rem; color: var(--bark); max-width: 65ch; }
 
     /* ── DECISIONS ── */
     .section-decisions {
-      padding: 6rem 0;
+      padding: 6rem 3rem;
       border-bottom: 1px solid var(--wheat);
       background: var(--parchment);
       margin: 0 -3rem;
-      padding-left: 3rem;
-      padding-right: 3rem;
     }
-
-    .section-decisions .section-label { margin-bottom: 0.5rem; }
 
     .section-decisions h2 {
       font-family: 'Playfair Display', serif;
@@ -342,10 +228,7 @@
       background: var(--wheat);
     }
 
-    .decision-card {
-      background: var(--cream);
-      padding: 2.5rem;
-    }
+    .decision-card { background: var(--cream); padding: 2.5rem; }
 
     .decision-q {
       font-family: 'Playfair Display', serif;
@@ -356,11 +239,7 @@
       line-height: 1.4;
     }
 
-    .decision-a {
-      font-size: 0.9rem;
-      color: var(--bark);
-      line-height: 1.65;
-    }
+    .decision-a { font-size: 0.9rem; color: var(--bark); line-height: 1.65; }
 
     .decision-tag {
       display: inline-block;
@@ -375,11 +254,7 @@
     }
 
     /* ── DASHBOARDS ── */
-    .section-dashboards {
-      padding: 6rem 0;
-    }
-
-    .section-dashboards .section-label { margin-bottom: 0.5rem; }
+    .section-dashboards { padding: 6rem 0; }
 
     .section-dashboards h2 {
       font-family: 'Playfair Display', serif;
@@ -389,7 +264,7 @@
       margin-bottom: 0.75rem;
     }
 
-    .section-dashboards > .content-wrap > p {
+    .section-dashboards > p {
       font-size: 1rem;
       color: var(--bark);
       margin-bottom: 3rem;
@@ -398,8 +273,6 @@
 
     .dashboard-tabs {
       display: flex;
-      gap: 0;
-      margin-bottom: 0;
       border-bottom: 2px solid var(--wheat);
       overflow-x: auto;
     }
@@ -421,18 +294,9 @@
     }
 
     .tab-btn:hover { color: var(--leather); }
-    .tab-btn.active {
-      color: var(--rust);
-      border-bottom-color: var(--rust);
-    }
+    .tab-btn.active { color: var(--rust); border-bottom-color: var(--rust); }
 
-    .dashboard-panel {
-      display: none;
-      background: var(--parchment);
-      border: 1px solid var(--wheat);
-      border-top: none;
-    }
-
+    .dashboard-panel { display: none; background: var(--parchment); border: 1px solid var(--wheat); border-top: none; }
     .dashboard-panel.active { display: block; }
 
     .dashboard-iframe-wrap {
@@ -446,15 +310,12 @@
     .dashboard-iframe-wrap iframe {
       width: 100%;
       height: 100%;
+      min-height: 800px;
       border: none;
       display: block;
-      min-height: 800px;
     }
 
-    .iframe-placeholder {
-      text-align: center;
-      padding: 4rem;
-    }
+    .iframe-placeholder { text-align: center; padding: 4rem; }
 
     .iframe-placeholder p {
       font-family: 'DM Mono', monospace;
@@ -473,11 +334,9 @@
 
     /* ── STACK ── */
     .section-stack {
-      padding: 6rem 0 8rem;
+      padding: 6rem 3rem 8rem;
       background: var(--soil);
       margin: 0 -3rem;
-      padding-left: 3rem;
-      padding-right: 3rem;
     }
 
     .section-stack .section-label { color: var(--clay); margin-bottom: 0.5rem; }
@@ -490,10 +349,7 @@
       margin-bottom: 3rem;
     }
 
-    .stack-table {
-      width: 100%;
-      border-collapse: collapse;
-    }
+    .stack-table { width: 100%; border-collapse: collapse; }
 
     .stack-table th {
       font-family: 'DM Mono', monospace;
@@ -503,12 +359,12 @@
       color: var(--clay);
       text-align: left;
       padding: 0.75rem 1.5rem;
-      border-bottom: 1px solid rgba(232, 213, 176, 0.2);
+      border-bottom: 1px solid rgba(221, 232, 216, 0.2);
     }
 
     .stack-table td {
       padding: 1.25rem 1.5rem;
-      border-bottom: 1px solid rgba(232, 213, 176, 0.08);
+      border-bottom: 1px solid rgba(221, 232, 216, 0.08);
       vertical-align: top;
     }
 
@@ -530,52 +386,11 @@
       color: var(--wheat);
     }
 
-    .td-why {
-      font-size: 0.88rem;
-      color: var(--parchment);
-      opacity: 0.75;
-    }
-
-    .td-cost {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.8rem;
-      color: var(--clay);
-      white-space: nowrap;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      padding: 3rem 6rem;
-      background: var(--bark);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .footer-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem;
-      color: var(--wheat);
-    }
-
-    .footer-links { display: flex; gap: 2rem; list-style: none; }
-
-    .footer-links a {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--clay);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover { color: var(--wheat); }
+    .td-why { font-size: 0.88rem; color: var(--parchment); opacity: 0.75; }
+    .td-cost { font-family: 'DM Mono', monospace; font-size: 0.8rem; color: var(--clay); white-space: nowrap; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { gap: 1.5rem; }
       .page-header { padding: 8rem 1.5rem 3rem; }
       .header-meta { gap: 1.5rem; }
       .content-wrap { padding: 0 1.5rem; }
@@ -584,11 +399,8 @@
       .decisions-grid { grid-template-columns: 1fr; }
       .pipeline-flow { flex-direction: column; }
       .pipeline-step::after { content: '↓'; right: auto; left: 50%; top: auto; bottom: -1.1rem; transform: translateX(-50%); }
-      .section-decisions,
-      .section-stack { margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
-      .stack-table th:nth-child(4),
-      .stack-table td:nth-child(4) { display: none; }
-      footer { flex-direction: column; gap: 1.5rem; padding: 2rem; text-align: center; }
+      .section-decisions, .section-stack { margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
+      .stack-table th:nth-child(4), .stack-table td:nth-child(4) { display: none; }
     }
   </style>
 </head>
@@ -603,7 +415,6 @@
     </ul>
   </nav>
 
-  <!-- PAGE HEADER -->
   <div class="page-header">
     <div class="header-inner">
       <a href="index.html" class="back-link">← Back to Home</a>
@@ -611,31 +422,18 @@
       <h1>Ranch Data<br>Pipeline</h1>
       <p class="header-summary">A lightweight, low-cost data pipeline built for a working cattle ranch — turning a spreadsheet into a live dashboard for under $5/month.</p>
       <div class="header-meta">
-        <div class="meta-item">
-          <div class="meta-label">Industry</div>
-          <div class="meta-value">Agriculture / Ranching</div>
-        </div>
-        <div class="meta-item">
-          <div class="meta-label">Stack</div>
-          <div class="meta-value">Sheets → Supabase → Metabase</div>
-        </div>
-        <div class="meta-item">
-          <div class="meta-label">Monthly Cost</div>
-          <div class="meta-value">~$5</div>
-        </div>
-        <div class="meta-item">
-          <div class="meta-label">Type</div>
-          <div class="meta-value">Freelance Client Project</div>
-        </div>
+        <div><div class="meta-label">Industry</div><div class="meta-value">Agriculture / Ranching</div></div>
+        <div><div class="meta-label">Stack</div><div class="meta-value">Sheets → Supabase → Metabase</div></div>
+        <div><div class="meta-label">Monthly Cost</div><div class="meta-value">~$5</div></div>
+        <div><div class="meta-label">Type</div><div class="meta-value">Freelance Client Project</div></div>
       </div>
     </div>
   </div>
 
   <div class="content-wrap">
 
-    <!-- PROBLEM -->
     <div class="section-problem">
-      <div class="section-sidebar">
+      <div>
         <div class="section-number">01</div>
         <div class="section-label">The Problem</div>
       </div>
@@ -652,7 +450,6 @@
       </div>
     </div>
 
-    <!-- PIPELINE -->
     <div class="section-pipeline">
       <p class="section-label">The Solution</p>
       <h2>A four-layer pipeline, built right-sized</h2>
@@ -685,11 +482,7 @@
       <p class="pipeline-desc">The event log model is append-only — every cattle event is a new row, never an overwrite. A <code>DISTINCT ON</code> PostgreSQL view reconstructs the current state of each animal from its history.</p>
     </div>
 
-  </div><!-- end content-wrap -->
-
-  <!-- DECISIONS — full bleed -->
-  <div class="section-decisions">
-    <div class="content-wrap">
+    <div class="section-decisions">
       <p class="section-label">Technical Decisions</p>
       <h2>Why these tools, not those tools</h2>
       <div class="decisions-grid">
@@ -715,21 +508,17 @@
         </div>
       </div>
     </div>
-  </div>
 
-  <div class="content-wrap">
-
-    <!-- DASHBOARDS -->
     <div class="section-dashboards">
       <p class="section-label">Live Dashboards</p>
       <h2>What the data looks like</h2>
-      <p style="color:var(--bark); margin-bottom:2rem; max-width:60ch;">The dashboards below are connected to real data generated from the pipeline. All data is anonymized demo data modeled after a real ranch operation.</p>
+      <p>The dashboards below are connected to real data generated from the pipeline. All data is anonymized demo data modeled after a real ranch operation.</p>
 
       <div class="dashboard-tabs">
-        <button class="tab-btn active" onclick="showTab('herd')">Herd Overview</button>
-        <button class="tab-btn" onclick="showTab('pregnancy')">Pregnancy Tracking</button>
-        <button class="tab-btn" onclick="showTab('calves')">Calf Crop</button>
-        <button class="tab-btn" onclick="showTab('financial')">Financial Summary</button>
+        <button class="tab-btn active" onclick="showTab('herd', this)">Herd Overview</button>
+        <button class="tab-btn" onclick="showTab('pregnancy', this)">Pregnancy Tracking</button>
+        <button class="tab-btn" onclick="showTab('calves', this)">Calf Crop</button>
+        <button class="tab-btn" onclick="showTab('financial', this)">Financial Summary</button>
       </div>
 
       <div id="tab-herd" class="dashboard-panel active">
@@ -805,9 +594,7 @@
 
   </div><!-- end content-wrap -->
 
-  <!-- STACK TABLE — full bleed -->
-  <div class="section-stack">
-    <div class="content-wrap">
+ <div class="section-stack">
       <p class="section-label">Tech Stack</p>
       <h2>Full stack breakdown</h2>
       <table class="stack-table">
@@ -853,6 +640,7 @@
         </tbody>
       </table>
     </div>
+
   </div>
 
   <footer>
@@ -865,11 +653,11 @@
   </footer>
 
   <script>
-    function showTab(name) {
+    function showTab(name, btn) {
       document.querySelectorAll('.dashboard-panel').forEach(p => p.classList.remove('active'));
       document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
       document.getElementById('tab-' + name).classList.add('active');
-      event.target.classList.add('active');
+      btn.classList.add('active');
     }
   </script>
 

@@ -7,74 +7,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { min-height: 100vh; display: flex; flex-direction: column; }
 
-    :root {
-      --soil:      #2c1f14;
-      --bark:      #4a3728;
-      --leather:   #8b5e3c;
-      --clay:      #c4895f;
-      --wheat:     #e8d5b0;
-      --parchment: #f5edd8;
-      --cream:     #faf6ee;
-      --sage:      #7a8c6e;
-      --sage-dark: #4e5c44;
-      --rust:      #a63d2f;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--cream);
-      color: var(--soil);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      line-height: 1.7;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.25rem 3rem;
-      background: rgba(250, 246, 238, 0.88);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(139, 94, 60, 0.15);
-    }
-
-    .nav-logo {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.8rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--leather);
-      text-decoration: none;
-    }
-
-    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
-
-    .nav-links a {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--bark);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover,
-    .nav-links a.active { color: var(--rust); }
-
-    /* ── MAIN ── */
     main {
       flex: 1;
       display: grid;
@@ -82,7 +18,7 @@
       min-height: 100vh;
     }
 
-    /* LEFT PANEL */
+    /* ── LEFT PANEL ── */
     .contact-left {
       background: var(--soil);
       padding: 10rem 5rem 5rem;
@@ -96,12 +32,10 @@
     .contact-left::before {
       content: '';
       position: absolute;
-      bottom: -100px;
-      left: -100px;
-      width: 500px;
-      height: 500px;
+      bottom: -100px; left: -100px;
+      width: 500px; height: 500px;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(196,137,95,0.12) 0%, transparent 70%);
+      background: radial-gradient(circle, rgba(201, 106, 46, 0.12) 0%, transparent 70%);
       pointer-events: none;
     }
 
@@ -130,14 +64,11 @@
     .left-sub {
       font-size: 1rem;
       color: var(--parchment);
-      opacity: 0;
       max-width: 38ch;
       margin-bottom: 4rem;
+      opacity: 0;
       animation: fadeUp 0.7s ease forwards 0.5s;
     }
-
-    /* suppress opacity-0 after animation fires */
-    .left-sub { opacity: 0; }
 
     .contact-details {
       display: flex;
@@ -146,8 +77,6 @@
       opacity: 0;
       animation: fadeUp 0.7s ease forwards 0.65s;
     }
-
-    .contact-item {}
 
     .contact-item-label {
       font-family: 'DM Mono', monospace;
@@ -158,10 +87,7 @@
       margin-bottom: 0.3rem;
     }
 
-    .contact-item-value {
-      font-size: 1rem;
-      color: var(--wheat);
-    }
+    .contact-item-value { font-size: 1rem; color: var(--wheat); }
 
     .contact-item-value a {
       color: var(--clay);
@@ -171,7 +97,7 @@
 
     .contact-item-value a:hover { color: var(--wheat); }
 
-    /* RIGHT PANEL */
+    /* ── RIGHT PANEL ── */
     .contact-right {
       background: var(--parchment);
       padding: 10rem 5rem 5rem;
@@ -188,9 +114,7 @@
       margin-bottom: 2.5rem;
     }
 
-    .form-group {
-      margin-bottom: 1.75rem;
-    }
+    .form-group { margin-bottom: 1.75rem; }
 
     .form-label {
       display: block;
@@ -218,20 +142,11 @@
     }
 
     .form-input:focus,
-    .form-textarea:focus {
-      border-color: var(--leather);
-    }
+    .form-textarea:focus { border-color: var(--leather); }
 
-    .form-textarea {
-      min-height: 140px;
-      resize: vertical;
-    }
+    .form-textarea { min-height: 140px; resize: vertical; }
 
-    .form-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
 
     .form-submit {
       width: 100%;
@@ -248,10 +163,7 @@
       margin-top: 0.5rem;
     }
 
-    .form-submit:hover {
-      background: var(--bark);
-      transform: translateY(-2px);
-    }
+    .form-submit:hover { background: var(--bark); transform: translateY(-2px); }
 
     .form-note {
       font-size: 0.78rem;
@@ -262,19 +174,9 @@
       letter-spacing: 0.05em;
     }
 
-    /* success state */
-    .form-success {
-      display: none;
-      text-align: center;
-      padding: 3rem;
-    }
-
+    .form-success { display: none; text-align: center; padding: 3rem; }
     .form-success.visible { display: block; }
-
-    .success-icon {
-      font-size: 3rem;
-      margin-bottom: 1rem;
-    }
+    .success-icon { font-size: 3rem; margin-bottom: 1rem; }
 
     .success-heading {
       font-family: 'Playfair Display', serif;
@@ -283,54 +185,14 @@
       margin-bottom: 0.75rem;
     }
 
-    .success-sub {
-      font-size: 0.9rem;
-      color: var(--bark);
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      padding: 2.5rem 6rem;
-      background: var(--bark);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .footer-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem;
-      color: var(--wheat);
-    }
-
-    .footer-links { display: flex; gap: 2rem; list-style: none; }
-
-    .footer-links a {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--clay);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover { color: var(--wheat); }
-
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(16px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
+    .success-sub { font-size: 0.9rem; color: var(--bark); }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { gap: 1.5rem; }
       main { grid-template-columns: 1fr; }
       .contact-left { padding: 8rem 2rem 4rem; }
       .contact-right { padding: 3rem 2rem 4rem; }
       .form-row { grid-template-columns: 1fr; }
-      footer { flex-direction: column; gap: 1.5rem; padding: 2rem; text-align: center; }
     }
   </style>
 </head>
@@ -346,7 +208,6 @@
   </nav>
 
   <main>
-    <!-- LEFT -->
     <div class="contact-left">
       <p class="left-eyebrow">Let's Talk</p>
       <h1 class="left-heading">Got an interesting problem?</h1>
@@ -355,8 +216,7 @@
         <div class="contact-item">
           <div class="contact-item-label">Email</div>
           <div class="contact-item-value">
-            <!-- Replace with your email -->
-            <a href="mailto:hello@kennanmasters.com">hello@kennanmasters.com</a>
+            <a href="mailto:klmasters@gmail.com.com">hello@kennanmasters.com</a>
           </div>
         </div>
         <div class="contact-item">
@@ -370,18 +230,15 @@
         <div class="contact-item">
           <div class="contact-item-label">GitHub</div>
           <div class="contact-item-value">
-            <!-- Replace with your GitHub URL -->
             <a href="https://github.com/" target="_blank" rel="noopener">github.com/kennanmasters</a>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- RIGHT -->
     <div class="contact-right">
       <h2 class="form-heading">Send a message</h2>
-
-      <form id="contact-form" onsubmit="handleSubmit(event)">
+      <form id="contact-form" netlify onsubmit="handleSubmit(event)">
         <div class="form-row">
           <div class="form-group">
             <label class="form-label" for="fname">First Name</label>
@@ -407,7 +264,6 @@
         <button type="submit" class="form-submit">Send Message →</button>
         <p class="form-note">* This form uses Netlify Forms — no backend needed.</p>
       </form>
-
       <div class="form-success" id="form-success">
         <div class="success-icon">✉️</div>
         <h3 class="success-heading">Message sent.</h3>
@@ -428,8 +284,6 @@
   <script>
     function handleSubmit(e) {
       e.preventDefault();
-      // Netlify Forms handles submission automatically when deployed.
-      // In local preview, this just shows the success state.
       document.getElementById('contact-form').style.display = 'none';
       document.getElementById('form-success').classList.add('visible');
     }

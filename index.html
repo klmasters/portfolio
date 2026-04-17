@@ -7,75 +7,9 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
   <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    :root {
-      --soil:      #2c1f14;
-      --bark:      #4a3728;
-      --leather:   #8b5e3c;
-      --clay:      #c4895f;
-      --wheat:     #e8d5b0;
-      --parchment: #f5edd8;
-      --cream:     #faf6ee;
-      --sage:      #7a8c6e;
-      --sage-dark: #4e5c44;
-      --rust:      #a63d2f;
-      --sky:       #6b8fa3;
-    }
-
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--cream);
-      color: var(--soil);
-      font-family: 'DM Sans', sans-serif;
-      font-weight: 300;
-      line-height: 1.7;
-      overflow-x: hidden;
-    }
-
-    /* ── NAV ── */
-    nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      z-index: 100;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 1.25rem 3rem;
-      background: rgba(250, 246, 238, 0.88);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid rgba(139, 94, 60, 0.15);
-    }
-
-    .nav-logo {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.8rem;
-      font-weight: 300;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--leather);
-      text-decoration: none;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 2.5rem;
-      list-style: none;
-    }
-
-    .nav-links a {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--bark);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .nav-links a:hover { color: var(--rust); }
+    body { overflow-x: hidden; }
 
     /* ── HERO ── */
     .hero {
@@ -145,43 +79,6 @@
       animation: fadeUp 0.8s ease forwards 0.85s;
     }
 
-    .btn-primary {
-      display: inline-block;
-      padding: 0.9rem 2rem;
-      background: var(--soil);
-      color: var(--wheat);
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: background 0.2s, transform 0.2s;
-    }
-
-    .btn-primary:hover {
-      background: var(--bark);
-      transform: translateY(-2px);
-    }
-
-    .btn-secondary {
-      display: inline-block;
-      padding: 0.9rem 2rem;
-      border: 1.5px solid var(--leather);
-      color: var(--leather);
-      font-family: 'DM Mono', monospace;
-      font-size: 0.75rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: none;
-      transition: all 0.2s;
-    }
-
-    .btn-secondary:hover {
-      background: var(--leather);
-      color: var(--cream);
-      transform: translateY(-2px);
-    }
-
     .hero-right {
       position: relative;
       display: flex;
@@ -189,26 +86,15 @@
       justify-content: center;
     }
 
-    /* Decorative terrain graphic */
     .terrain {
       position: absolute;
       inset: 0;
-      background:
-        linear-gradient(160deg, var(--wheat) 0%, var(--parchment) 40%, var(--clay) 100%);
+      background: linear-gradient(160deg, var(--wheat) 0%, var(--parchment) 40%, var(--clay) 100%);
       opacity: 0.45;
     }
 
-    .terrain-lines {
-      position: absolute;
-      inset: 0;
-      overflow: hidden;
-    }
-
-    .terrain-lines svg {
-      width: 100%;
-      height: 100%;
-      opacity: 0.18;
-    }
+    .terrain-lines { position: absolute; inset: 0; overflow: hidden; }
+    .terrain-lines svg { width: 100%; height: 100%; opacity: 0.18; }
 
     .hero-stat-block {
       position: relative;
@@ -222,9 +108,9 @@
     }
 
     .stat-card {
-      background: rgba(250, 246, 238, 0.85);
+      background: rgba(250, 249, 244, 0.85);
       backdrop-filter: blur(8px);
-      border: 1px solid rgba(139, 94, 60, 0.2);
+      border: 1px solid rgba(61, 102, 66, 0.2);
       padding: 1.5rem 2rem;
       min-width: 260px;
     }
@@ -249,7 +135,6 @@
       color: var(--sage);
     }
 
-    /* diagonal divider */
     .hero::after {
       content: '';
       position: absolute;
@@ -261,29 +146,10 @@
       z-index: 1;
     }
 
-    /* ── WORK SECTION ── */
+    /* ── WORK ── */
     .section-work {
       padding: 8rem 6rem;
       background: var(--parchment);
-      position: relative;
-    }
-
-    .section-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--sage);
-      margin-bottom: 1rem;
-    }
-
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2rem, 3.5vw, 3rem);
-      font-weight: 700;
-      color: var(--soil);
-      margin-bottom: 4rem;
-      max-width: 20ch;
     }
 
     .work-grid {
@@ -342,11 +208,7 @@
       margin-bottom: 2rem;
     }
 
-    .work-card-stack {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-    }
+    .work-card-stack { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 
     .stack-pill {
       font-family: 'DM Mono', monospace;
@@ -360,8 +222,7 @@
 
     .work-card-arrow {
       position: absolute;
-      top: 3rem;
-      right: 3rem;
+      top: 3rem; right: 3rem;
       font-size: 1.5rem;
       color: var(--clay);
       transition: transform 0.2s;
@@ -385,7 +246,7 @@
       opacity: 0.6;
     }
 
-    /* ── ABOUT STRIP ── */
+    /* ── ABOUT ── */
     .about-strip {
       padding: 7rem 6rem;
       display: grid;
@@ -397,11 +258,7 @@
     }
 
     .about-strip .section-label { color: var(--clay); }
-
-    .about-strip .section-title {
-      color: var(--wheat);
-      margin-bottom: 1.5rem;
-    }
+    .about-strip .section-title { color: var(--wheat); margin-bottom: 1.5rem; }
 
     .about-text {
       font-size: 1rem;
@@ -410,27 +267,17 @@
       margin-bottom: 2rem;
     }
 
-    .about-strip .btn-secondary {
-      border-color: var(--clay);
-      color: var(--clay);
-    }
-
-    .about-strip .btn-secondary:hover {
-      background: var(--clay);
-      color: var(--soil);
-    }
+    .about-strip .btn-secondary { border-color: var(--clay); color: var(--clay); }
+    .about-strip .btn-secondary:hover { background: var(--clay); color: var(--soil); }
 
     .skills-list {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 1px;
-      background: rgba(232, 213, 176, 0.15);
+      background: rgba(221, 232, 216, 0.15);
     }
 
-    .skill-item {
-      padding: 1.5rem;
-      background: rgba(44, 31, 20, 0.6);
-    }
+    .skill-item { padding: 1.5rem; background: rgba(28, 46, 31, 0.6); }
 
     .skill-name {
       font-family: 'DM Mono', monospace;
@@ -440,85 +287,20 @@
       margin-bottom: 0.25rem;
     }
 
-    .skill-desc {
-      font-size: 0.78rem;
-      color: var(--clay);
-      opacity: 0.8;
-    }
-
-    /* ── FOOTER ── */
-    footer {
-      padding: 3rem 6rem;
-      background: var(--bark);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .footer-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 1rem;
-      color: var(--wheat);
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 2rem;
-      list-style: none;
-    }
-
-    .footer-links a {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--clay);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-
-    .footer-links a:hover { color: var(--wheat); }
-
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
+    .skill-desc { font-size: 0.78rem; color: var(--clay); opacity: 0.8; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
-      nav { padding: 1rem 1.5rem; }
-      .nav-links { gap: 1.5rem; }
-
-      .hero {
-        grid-template-columns: 1fr;
-        min-height: auto;
-      }
-
+      .hero { grid-template-columns: 1fr; min-height: auto; }
       .hero-left { padding: 7rem 2rem 3rem; }
       .hero::after { display: none; }
-
-      .hero-right {
-        padding: 2rem;
-        min-height: 300px;
-      }
-
+      .hero-right { padding: 2rem; min-height: 300px; }
       .hero-stat-block { flex-direction: row; flex-wrap: wrap; gap: 1rem; padding: 1.5rem; }
       .stat-card { min-width: auto; flex: 1; }
-      .stat-card:nth-child(2),
-      .stat-card:nth-child(3) { margin-left: 0; }
-
+      .stat-card:nth-child(2), .stat-card:nth-child(3) { margin-left: 0; }
       .section-work { padding: 5rem 2rem; }
       .work-grid { grid-template-columns: 1fr; }
-
       .about-strip { grid-template-columns: 1fr; padding: 5rem 2rem; gap: 3rem; }
-
-      footer { flex-direction: column; gap: 1.5rem; padding: 2rem; text-align: center; }
     }
   </style>
 </head>
@@ -533,7 +315,6 @@
     </ul>
   </nav>
 
-  <!-- HERO -->
   <section class="hero">
     <div class="hero-left">
       <p class="hero-eyebrow">Portfolio</p>
@@ -545,20 +326,19 @@
         <a href="contact.html" class="btn-secondary">Get In Touch</a>
       </div>
     </div>
-
     <div class="hero-right">
       <div class="terrain"></div>
       <div class="terrain-lines">
         <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0,200 Q150,120 300,180 T600,160" fill="none" stroke="#4a3728" stroke-width="1.5"/>
-          <path d="M0,280 Q200,200 350,260 T600,240" fill="none" stroke="#4a3728" stroke-width="1.5"/>
-          <path d="M0,360 Q100,300 300,340 T600,320" fill="none" stroke="#4a3728" stroke-width="1.5"/>
-          <path d="M0,440 Q250,380 400,420 T600,400" fill="none" stroke="#4a3728" stroke-width="1.5"/>
-          <path d="M0,520 Q150,460 320,500 T600,480" fill="none" stroke="#4a3728" stroke-width="1.5"/>
-          <path d="M0,600 Q200,540 380,580 T600,560" fill="none" stroke="#4a3728" stroke-width="1.5"/>
-          <circle cx="480" cy="200" r="80" fill="none" stroke="#8b5e3c" stroke-width="1"/>
-          <circle cx="480" cy="200" r="55" fill="none" stroke="#8b5e3c" stroke-width="1"/>
-          <circle cx="480" cy="200" r="30" fill="none" stroke="#8b5e3c" stroke-width="1"/>
+          <path d="M0,200 Q150,120 300,180 T600,160" fill="none" stroke="#2e4d31" stroke-width="1.5"/>
+          <path d="M0,280 Q200,200 350,260 T600,240" fill="none" stroke="#2e4d31" stroke-width="1.5"/>
+          <path d="M0,360 Q100,300 300,340 T600,320" fill="none" stroke="#2e4d31" stroke-width="1.5"/>
+          <path d="M0,440 Q250,380 400,420 T600,400" fill="none" stroke="#2e4d31" stroke-width="1.5"/>
+          <path d="M0,520 Q150,460 320,500 T600,480" fill="none" stroke="#2e4d31" stroke-width="1.5"/>
+          <path d="M0,600 Q200,540 380,580 T600,560" fill="none" stroke="#2e4d31" stroke-width="1.5"/>
+          <circle cx="480" cy="200" r="80" fill="none" stroke="#3d6642" stroke-width="1"/>
+          <circle cx="480" cy="200" r="55" fill="none" stroke="#3d6642" stroke-width="1"/>
+          <circle cx="480" cy="200" r="30" fill="none" stroke="#3d6642" stroke-width="1"/>
         </svg>
       </div>
       <div class="hero-stat-block">
@@ -578,7 +358,6 @@
     </div>
   </section>
 
-  <!-- WORK -->
   <section class="section-work">
     <p class="section-label">Selected Work</p>
     <h2 class="section-title">Projects &amp; Case Studies</h2>
@@ -602,7 +381,6 @@
     </div>
   </section>
 
-  <!-- ABOUT -->
   <section class="about-strip">
     <div>
       <p class="section-label">About</p>
@@ -611,30 +389,12 @@
       <a href="contact.html" class="btn-secondary">Work Together</a>
     </div>
     <div class="skills-list">
-      <div class="skill-item">
-        <div class="skill-name">Pipelines</div>
-        <div class="skill-desc">ETL / ELT design</div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-name">SQL</div>
-        <div class="skill-desc">PostgreSQL, Supabase</div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-name">Automation</div>
-        <div class="skill-desc">Apps Script, Python</div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-name">Visualization</div>
-        <div class="skill-desc">Metabase, dashboards</div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-name">Databases</div>
-        <div class="skill-desc">Schema design, views</div>
-      </div>
-      <div class="skill-item">
-        <div class="skill-name">Low-cost infra</div>
-        <div class="skill-desc">Railway, Netlify</div>
-      </div>
+      <div class="skill-item"><div class="skill-name">Pipelines</div><div class="skill-desc">ETL / ELT design</div></div>
+      <div class="skill-item"><div class="skill-name">SQL</div><div class="skill-desc">PostgreSQL, Supabase</div></div>
+      <div class="skill-item"><div class="skill-name">Automation</div><div class="skill-desc">Apps Script, Python</div></div>
+      <div class="skill-item"><div class="skill-name">Visualization</div><div class="skill-desc">Metabase, dashboards</div></div>
+      <div class="skill-item"><div class="skill-name">Databases</div><div class="skill-desc">Schema design, views</div></div>
+      <div class="skill-item"><div class="skill-name">Low-cost infra</div><div class="skill-desc">Railway, Netlify</div></div>
     </div>
   </section>
 
