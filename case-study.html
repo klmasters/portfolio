@@ -437,12 +437,10 @@
 
     .dashboard-iframe-wrap {
       width: 100%;
-      aspect-ratio: 16 / 9;
+      height: 800px;
       background: var(--wheat);
-      display: flex;
-      align-items: center;
-      justify-content: center;
       position: relative;
+      overflow: hidden;
     }
 
     .dashboard-iframe-wrap iframe {
@@ -450,6 +448,7 @@
       height: 100%;
       border: none;
       display: block;
+      min-height: 800px;
     }
 
     .iframe-placeholder {
