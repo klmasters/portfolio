@@ -1,0 +1,846 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ranch Data Pipeline — Kennan Masters</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --soil:      #2c1f14;
+      --bark:      #4a3728;
+      --leather:   #8b5e3c;
+      --clay:      #c4895f;
+      --wheat:     #e8d5b0;
+      --parchment: #f5edd8;
+      --cream:     #faf6ee;
+      --sage:      #7a8c6e;
+      --sage-dark: #4e5c44;
+      --rust:      #a63d2f;
+      --sky:       #6b8fa3;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--soil);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      background: rgba(250, 246, 238, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(139, 94, 60, 0.15);
+    }
+
+    .nav-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--leather);
+      text-decoration: none;
+    }
+
+    .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--bark);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--rust); }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      padding: 10rem 6rem 5rem;
+      background: var(--soil);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-header::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 30 Q15 10 30 30 T60 30' fill='none' stroke='%234a3728' stroke-width='1'/%3E%3C/svg%3E") repeat;
+      opacity: 0.3;
+    }
+
+    .header-inner { position: relative; z-index: 1; max-width: 900px; }
+
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--clay);
+      text-decoration: none;
+      margin-bottom: 2.5rem;
+      transition: color 0.2s;
+    }
+
+    .back-link:hover { color: var(--wheat); }
+
+    .header-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 1rem;
+    }
+
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 5vw, 4.5rem);
+      font-weight: 700;
+      color: var(--wheat);
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+    }
+
+    .header-summary {
+      font-size: 1.1rem;
+      color: var(--parchment);
+      opacity: 0.8;
+      max-width: 60ch;
+      margin-bottom: 3rem;
+    }
+
+    .header-meta {
+      display: flex;
+      gap: 3rem;
+      flex-wrap: wrap;
+    }
+
+    .meta-item {}
+
+    .meta-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--clay);
+      margin-bottom: 0.25rem;
+    }
+
+    .meta-value {
+      font-size: 0.9rem;
+      color: var(--wheat);
+    }
+
+    /* ── CONTENT LAYOUT ── */
+    .content-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 3rem;
+    }
+
+    /* ── PROBLEM ── */
+    .section-problem {
+      padding: 6rem 0;
+      display: grid;
+      grid-template-columns: 1fr 2fr;
+      gap: 4rem;
+      border-bottom: 1px solid var(--wheat);
+    }
+
+    .section-sidebar {}
+
+    .section-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 5rem;
+      font-weight: 700;
+      color: var(--wheat);
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sage);
+    }
+
+    .section-body h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--soil);
+      margin-bottom: 1.25rem;
+      line-height: 1.2;
+    }
+
+    .section-body p {
+      font-size: 1rem;
+      color: var(--bark);
+      margin-bottom: 1.25rem;
+      max-width: 65ch;
+    }
+
+    .constraint-list {
+      list-style: none;
+      margin-top: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .constraint-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      font-size: 0.95rem;
+      color: var(--bark);
+    }
+
+    .constraint-list li::before {
+      content: '—';
+      color: var(--clay);
+      font-family: 'DM Mono', monospace;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+
+    /* ── PIPELINE DIAGRAM ── */
+    .section-pipeline {
+      padding: 6rem 0;
+      border-bottom: 1px solid var(--wheat);
+    }
+
+    .section-pipeline .section-label {
+      margin-bottom: 0.5rem;
+    }
+
+    .section-pipeline h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--soil);
+      margin-bottom: 3rem;
+    }
+
+    .pipeline-flow {
+      display: flex;
+      align-items: stretch;
+      gap: 0;
+      margin-bottom: 3rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
+    }
+
+    .pipeline-step {
+      flex: 1;
+      min-width: 160px;
+      background: var(--parchment);
+      border: 1px solid var(--wheat);
+      padding: 2rem 1.5rem;
+      position: relative;
+    }
+
+    .pipeline-step::after {
+      content: '→';
+      position: absolute;
+      right: -1.1rem;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 1.2rem;
+      color: var(--clay);
+      z-index: 2;
+      background: var(--cream);
+      padding: 0 0.2rem;
+    }
+
+    .pipeline-step:last-child::after { display: none; }
+
+    .step-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1rem;
+    }
+
+    .step-tool {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--clay);
+      margin-bottom: 0.4rem;
+    }
+
+    .step-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--soil);
+      margin-bottom: 0.5rem;
+    }
+
+    .step-desc {
+      font-size: 0.8rem;
+      color: var(--bark);
+      opacity: 0.85;
+      line-height: 1.5;
+    }
+
+    .pipeline-desc {
+      font-size: 1rem;
+      color: var(--bark);
+      max-width: 65ch;
+    }
+
+    /* ── DECISIONS ── */
+    .section-decisions {
+      padding: 6rem 0;
+      border-bottom: 1px solid var(--wheat);
+      background: var(--parchment);
+      margin: 0 -3rem;
+      padding-left: 3rem;
+      padding-right: 3rem;
+    }
+
+    .section-decisions .section-label { margin-bottom: 0.5rem; }
+
+    .section-decisions h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--soil);
+      margin-bottom: 3rem;
+    }
+
+    .decisions-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2px;
+      background: var(--wheat);
+    }
+
+    .decision-card {
+      background: var(--cream);
+      padding: 2.5rem;
+    }
+
+    .decision-q {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: 1.05rem;
+      color: var(--leather);
+      margin-bottom: 1rem;
+      line-height: 1.4;
+    }
+
+    .decision-a {
+      font-size: 0.9rem;
+      color: var(--bark);
+      line-height: 1.65;
+    }
+
+    .decision-tag {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.6rem;
+      background: var(--wheat);
+      color: var(--sage-dark);
+      margin-bottom: 1rem;
+    }
+
+    /* ── DASHBOARDS ── */
+    .section-dashboards {
+      padding: 6rem 0;
+    }
+
+    .section-dashboards .section-label { margin-bottom: 0.5rem; }
+
+    .section-dashboards h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--soil);
+      margin-bottom: 0.75rem;
+    }
+
+    .section-dashboards > .content-wrap > p {
+      font-size: 1rem;
+      color: var(--bark);
+      margin-bottom: 3rem;
+      max-width: 60ch;
+    }
+
+    .dashboard-tabs {
+      display: flex;
+      gap: 0;
+      margin-bottom: 0;
+      border-bottom: 2px solid var(--wheat);
+      overflow-x: auto;
+    }
+
+    .tab-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 1rem 1.75rem;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--bark);
+      cursor: pointer;
+      white-space: nowrap;
+      margin-bottom: -2px;
+      transition: all 0.2s;
+    }
+
+    .tab-btn:hover { color: var(--leather); }
+    .tab-btn.active {
+      color: var(--rust);
+      border-bottom-color: var(--rust);
+    }
+
+    .dashboard-panel {
+      display: none;
+      background: var(--parchment);
+      border: 1px solid var(--wheat);
+      border-top: none;
+    }
+
+    .dashboard-panel.active { display: block; }
+
+    .dashboard-iframe-wrap {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--wheat);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .dashboard-iframe-wrap iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+      display: block;
+    }
+
+    .iframe-placeholder {
+      text-align: center;
+      padding: 4rem;
+    }
+
+    .iframe-placeholder p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--leather);
+      opacity: 0.6;
+    }
+
+    .dashboard-caption {
+      padding: 1.25rem 1.75rem;
+      font-size: 0.85rem;
+      color: var(--bark);
+      border-top: 1px solid var(--wheat);
+    }
+
+    /* ── STACK ── */
+    .section-stack {
+      padding: 6rem 0 8rem;
+      background: var(--soil);
+      margin: 0 -3rem;
+      padding-left: 3rem;
+      padding-right: 3rem;
+    }
+
+    .section-stack .section-label { color: var(--clay); margin-bottom: 0.5rem; }
+
+    .section-stack h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--wheat);
+      margin-bottom: 3rem;
+    }
+
+    .stack-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .stack-table th {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--clay);
+      text-align: left;
+      padding: 0.75rem 1.5rem;
+      border-bottom: 1px solid rgba(232, 213, 176, 0.2);
+    }
+
+    .stack-table td {
+      padding: 1.25rem 1.5rem;
+      border-bottom: 1px solid rgba(232, 213, 176, 0.08);
+      vertical-align: top;
+    }
+
+    .stack-table tr:last-child td { border-bottom: none; }
+
+    .td-layer {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--sage);
+      white-space: nowrap;
+    }
+
+    .td-tool {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--wheat);
+    }
+
+    .td-why {
+      font-size: 0.88rem;
+      color: var(--parchment);
+      opacity: 0.75;
+    }
+
+    .td-cost {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      color: var(--clay);
+      white-space: nowrap;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem 6rem;
+      background: var(--bark);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--wheat);
+    }
+
+    .footer-links { display: flex; gap: 2rem; list-style: none; }
+
+    .footer-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--clay);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--wheat); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+      .page-header { padding: 8rem 1.5rem 3rem; }
+      .header-meta { gap: 1.5rem; }
+      .content-wrap { padding: 0 1.5rem; }
+      .section-problem { grid-template-columns: 1fr; gap: 1.5rem; }
+      .section-number { font-size: 3rem; }
+      .decisions-grid { grid-template-columns: 1fr; }
+      .pipeline-flow { flex-direction: column; }
+      .pipeline-step::after { content: '↓'; right: auto; left: 50%; top: auto; bottom: -1.1rem; transform: translateX(-50%); }
+      .section-decisions,
+      .section-stack { margin: 0 -1.5rem; padding-left: 1.5rem; padding-right: 1.5rem; }
+      .stack-table th:nth-child(4),
+      .stack-table td:nth-child(4) { display: none; }
+      footer { flex-direction: column; gap: 1.5rem; padding: 2rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">KM</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="case-study.html" class="active">Work</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- PAGE HEADER -->
+  <div class="page-header">
+    <div class="header-inner">
+      <a href="index.html" class="back-link">← Back to Home</a>
+      <p class="header-tag">Case Study — Data Pipeline</p>
+      <h1>Ranch Data<br>Pipeline</h1>
+      <p class="header-summary">A lightweight, low-cost data pipeline built for a working cattle ranch — turning a spreadsheet into a live dashboard for under $5/month.</p>
+      <div class="header-meta">
+        <div class="meta-item">
+          <div class="meta-label">Industry</div>
+          <div class="meta-value">Agriculture / Ranching</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Stack</div>
+          <div class="meta-value">Sheets → Supabase → Metabase</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Monthly Cost</div>
+          <div class="meta-value">~$5</div>
+        </div>
+        <div class="meta-item">
+          <div class="meta-label">Type</div>
+          <div class="meta-value">Freelance Client Project</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-wrap">
+
+    <!-- PROBLEM -->
+    <div class="section-problem">
+      <div class="section-sidebar">
+        <div class="section-number">01</div>
+        <div class="section-label">The Problem</div>
+      </div>
+      <div class="section-body">
+        <h2>A working ranch with no visibility into its own data</h2>
+        <p>The client runs a cattle operation tracking hundreds of animals across births, purchases, sales, vaccinations, pregnancies, and deaths. All of it lived in notebooks and memory — no way to query it, trend it, or share it.</p>
+        <p>The goal was a system that gave them real visibility into their herd without adding complexity to their daily workflow. The client is comfortable with spreadsheets, not databases.</p>
+        <ul class="constraint-list">
+          <li>Data entry needed to stay in a familiar tool — Google Sheets</li>
+          <li>Small, infrequent updates — not a high-volume streaming problem</li>
+          <li>Cost had to be minimal — this is a small operation</li>
+          <li>No technical sophistication on the client side to maintain infrastructure</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PIPELINE -->
+    <div class="section-pipeline">
+      <p class="section-label">The Solution</p>
+      <h2>A four-layer pipeline, built right-sized</h2>
+      <div class="pipeline-flow">
+        <div class="pipeline-step">
+          <div class="step-icon">📋</div>
+          <div class="step-tool">Entry Layer</div>
+          <div class="step-name">Google Sheets</div>
+          <div class="step-desc">Client enters cattle events — births, vaccinations, sales — in a formatted spreadsheet with dropdowns and validation.</div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-icon">⚙️</div>
+          <div class="step-tool">Sync Layer</div>
+          <div class="step-name">Apps Script</div>
+          <div class="step-desc">CattleSync.gs runs on a manual trigger, validates rows, batches them, and upserts to Supabase via the REST API.</div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-icon">🗄️</div>
+          <div class="step-tool">Storage Layer</div>
+          <div class="step-name">Supabase</div>
+          <div class="step-desc">PostgreSQL database stores the event log. A SQL view surfaces the current state of each animal for dashboards.</div>
+        </div>
+        <div class="pipeline-step">
+          <div class="step-icon">📊</div>
+          <div class="step-tool">Visualization</div>
+          <div class="step-name">Metabase</div>
+          <div class="step-desc">Self-hosted on Railway. Dashboards show herd composition, pregnancy tracking, calf crop rates, and financial summaries.</div>
+        </div>
+      </div>
+      <p class="pipeline-desc">The event log model is append-only — every cattle event is a new row, never an overwrite. A <code>DISTINCT ON</code> PostgreSQL view reconstructs the current state of each animal from its history.</p>
+    </div>
+
+  </div><!-- end content-wrap -->
+
+  <!-- DECISIONS — full bleed -->
+  <div class="section-decisions">
+    <div class="content-wrap">
+      <p class="section-label">Technical Decisions</p>
+      <h2>Why these tools, not those tools</h2>
+      <div class="decisions-grid">
+        <div class="decision-card">
+          <div class="decision-tag">Data Entry</div>
+          <p class="decision-q">"Why Google Sheets instead of a custom form or app?"</p>
+          <p class="decision-a">The client already uses spreadsheets daily. A custom UI would introduce training overhead and a support burden. Sheets with dropdowns and validation gives 90% of the data quality benefit for zero adoption cost.</p>
+        </div>
+        <div class="decision-card">
+          <div class="decision-tag">Sync</div>
+          <p class="decision-q">"Why a manual sync trigger instead of automatic?"</p>
+          <p class="decision-a">Updates happen in infrequent batches — a few dozen rows after a working day. A manual button keeps the client in control and avoids the complexity and cost of a real-time sync layer that would be overkill here.</p>
+        </div>
+        <div class="decision-card">
+          <div class="decision-tag">Database</div>
+          <p class="decision-q">"Why Supabase over a simpler option like Airtable?"</p>
+          <p class="decision-a">Real PostgreSQL means real SQL — window functions, views, and <code>DISTINCT ON</code> for the current-state query. Airtable's query layer would have hit a ceiling quickly. Supabase's free tier also has no row limits that matter here.</p>
+        </div>
+        <div class="decision-card">
+          <div class="decision-tag">Visualization</div>
+          <p class="decision-q">"Why self-host Metabase instead of using a managed BI tool?"</p>
+          <p class="decision-a">Metabase on Railway costs ~$5/month and gives full dashboard functionality. Managed BI tools at this feature level start at $50–200/month. For a small operation, that's the difference between viable and not.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="content-wrap">
+
+    <!-- DASHBOARDS -->
+    <div class="section-dashboards">
+      <p class="section-label">Live Dashboards</p>
+      <h2>What the data looks like</h2>
+      <p style="color:var(--bark); margin-bottom:2rem; max-width:60ch;">The dashboards below are connected to real data generated from the pipeline. All data is anonymized demo data modeled after a real ranch operation.</p>
+
+      <div class="dashboard-tabs">
+        <button class="tab-btn active" onclick="showTab('herd')">Herd Overview</button>
+        <button class="tab-btn" onclick="showTab('pregnancy')">Pregnancy Tracking</button>
+        <button class="tab-btn" onclick="showTab('calves')">Calf Crop</button>
+        <button class="tab-btn" onclick="showTab('financial')">Financial Summary</button>
+      </div>
+
+      <div id="tab-herd" class="dashboard-panel active">
+        <div class="dashboard-iframe-wrap">
+          <!-- Replace src with your Metabase public embed URL -->
+          <div class="iframe-placeholder">
+            <p>[ Herd Overview Dashboard ]<br><br>Replace this with your Metabase embed URL</p>
+          </div>
+        </div>
+        <div class="dashboard-caption">Current herd composition by animal type, breed, and location. Excludes sold and deceased animals.</div>
+      </div>
+
+      <div id="tab-pregnancy" class="dashboard-panel">
+        <div class="dashboard-iframe-wrap">
+          <div class="iframe-placeholder">
+            <p>[ Pregnancy Tracking Dashboard ]<br><br>Replace this with your Metabase embed URL</p>
+          </div>
+        </div>
+        <div class="dashboard-caption">Pregnancies confirmed per year alongside expected calving dates. Filtered to active cows only.</div>
+      </div>
+
+      <div id="tab-calves" class="dashboard-panel">
+        <div class="dashboard-iframe-wrap">
+          <div class="iframe-placeholder">
+            <p>[ Calf Crop Dashboard ]<br><br>Replace this with your Metabase embed URL</p>
+          </div>
+        </div>
+        <div class="dashboard-caption">Calves born and sold per year with calf crop rate. Tracks mother-calf relationships via the event log.</div>
+      </div>
+
+      <div id="tab-financial" class="dashboard-panel">
+        <div class="dashboard-iframe-wrap">
+          <div class="iframe-placeholder">
+            <p>[ Financial Summary Dashboard ]<br><br>Replace this with your Metabase embed URL</p>
+          </div>
+        </div>
+        <div class="dashboard-caption">Purchase and sale transactions by year. Pulled from a separate transactions table linked to the event log by tag number.</div>
+      </div>
+
+    </div>
+
+  </div><!-- end content-wrap -->
+
+  <!-- STACK TABLE — full bleed -->
+  <div class="section-stack">
+    <div class="content-wrap">
+      <p class="section-label">Tech Stack</p>
+      <h2>Full stack breakdown</h2>
+      <table class="stack-table">
+        <thead>
+          <tr>
+            <th>Layer</th>
+            <th>Tool</th>
+            <th>Why</th>
+            <th>Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="td-layer">Entry</td>
+            <td class="td-tool">Google Sheets</td>
+            <td class="td-why">Familiar to client, zero training needed. Dropdowns and validation enforce data quality.</td>
+            <td class="td-cost">Free</td>
+          </tr>
+          <tr>
+            <td class="td-layer">Sync</td>
+            <td class="td-tool">Google Apps Script</td>
+            <td class="td-why">Runs inside Sheets, no external infrastructure. Batched upserts keep it fast and within execution limits.</td>
+            <td class="td-cost">Free</td>
+          </tr>
+          <tr>
+            <td class="td-layer">Database</td>
+            <td class="td-tool">Supabase</td>
+            <td class="td-why">Real PostgreSQL with a REST API. Free tier handles this volume comfortably. SQL views handle current-state logic.</td>
+            <td class="td-cost">Free</td>
+          </tr>
+          <tr>
+            <td class="td-layer">Visualization</td>
+            <td class="td-tool">Metabase on Railway</td>
+            <td class="td-why">Full-featured BI tool. Self-hosting on Railway keeps cost minimal while enabling public dashboard sharing.</td>
+            <td class="td-cost">~$5/mo</td>
+          </tr>
+          <tr>
+            <td class="td-layer">Hosting</td>
+            <td class="td-tool">Netlify</td>
+            <td class="td-why">Static site hosting for this portfolio. Continuous deployment from GitHub, custom domain, free SSL.</td>
+            <td class="td-cost">Free</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <footer>
+    <span class="footer-name">Kennan Masters</span>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="case-study.html">Work</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </footer>
+
+  <script>
+    function showTab(name) {
+      document.querySelectorAll('.dashboard-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.getElementById('tab-' + name).classList.add('active');
+      event.target.classList.add('active');
+    }
+  </script>
+
+</body>
+</html>

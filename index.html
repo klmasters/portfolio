@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kennan Masters — Data Engineer & Problem Solver</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --soil:      #2c1f14;
+      --bark:      #4a3728;
+      --leather:   #8b5e3c;
+      --clay:      #c4895f;
+      --wheat:     #e8d5b0;
+      --parchment: #f5edd8;
+      --cream:     #faf6ee;
+      --sage:      #7a8c6e;
+      --sage-dark: #4e5c44;
+      --rust:      #a63d2f;
+      --sky:       #6b8fa3;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      color: var(--soil);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 300;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.25rem 3rem;
+      background: rgba(250, 246, 238, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(139, 94, 60, 0.15);
+    }
+
+    .nav-logo {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 300;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--leather);
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--bark);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--rust); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-left {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 8rem 4rem 4rem 6rem;
+      position: relative;
+      z-index: 2;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 1.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.2s;
+    }
+
+    .hero-name {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.5rem, 5vw, 5.5rem);
+      font-weight: 700;
+      line-height: 1.05;
+      color: var(--soil);
+      margin-bottom: 0.5rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.4s;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.1rem, 1.8vw, 1.4rem);
+      font-weight: 400;
+      font-style: italic;
+      color: var(--leather);
+      margin-bottom: 2rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.55s;
+    }
+
+    .hero-bio {
+      font-size: 1.05rem;
+      color: var(--bark);
+      max-width: 38ch;
+      margin-bottom: 3rem;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.7s;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards 0.85s;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 0.9rem 2rem;
+      background: var(--soil);
+      color: var(--wheat);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--bark);
+      transform: translateY(-2px);
+    }
+
+    .btn-secondary {
+      display: inline-block;
+      padding: 0.9rem 2rem;
+      border: 1.5px solid var(--leather);
+      color: var(--leather);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: var(--leather);
+      color: var(--cream);
+      transform: translateY(-2px);
+    }
+
+    .hero-right {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Decorative terrain graphic */
+    .terrain {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(160deg, var(--wheat) 0%, var(--parchment) 40%, var(--clay) 100%);
+      opacity: 0.45;
+    }
+
+    .terrain-lines {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+    }
+
+    .terrain-lines svg {
+      width: 100%;
+      height: 100%;
+      opacity: 0.18;
+    }
+
+    .hero-stat-block {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 3rem;
+      opacity: 0;
+      animation: fadeIn 1s ease forwards 1s;
+    }
+
+    .stat-card {
+      background: rgba(250, 246, 238, 0.85);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(139, 94, 60, 0.2);
+      padding: 1.5rem 2rem;
+      min-width: 260px;
+    }
+
+    .stat-card:nth-child(2) { margin-left: 2rem; }
+    .stat-card:nth-child(3) { margin-left: 1rem; }
+
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 700;
+      color: var(--soil);
+      line-height: 1;
+      margin-bottom: 0.25rem;
+    }
+
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--sage);
+    }
+
+    /* diagonal divider */
+    .hero::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      left: 50%;
+      width: 120px;
+      background: var(--cream);
+      transform: skewX(-3deg);
+      z-index: 1;
+    }
+
+    /* ── WORK SECTION ── */
+    .section-work {
+      padding: 8rem 6rem;
+      background: var(--parchment);
+      position: relative;
+    }
+
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--sage);
+      margin-bottom: 1rem;
+    }
+
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 700;
+      color: var(--soil);
+      margin-bottom: 4rem;
+      max-width: 20ch;
+    }
+
+    .work-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2px;
+      background: var(--wheat);
+    }
+
+    .work-card {
+      background: var(--cream);
+      padding: 3rem;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      transition: background 0.2s;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .work-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0;
+      height: 3px;
+      width: 0;
+      background: var(--rust);
+      transition: width 0.3s ease;
+    }
+
+    .work-card:hover { background: var(--parchment); }
+    .work-card:hover::before { width: 100%; }
+
+    .work-card-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--clay);
+      margin-bottom: 1rem;
+    }
+
+    .work-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      color: var(--soil);
+      margin-bottom: 1rem;
+      line-height: 1.2;
+    }
+
+    .work-card-desc {
+      font-size: 0.9rem;
+      color: var(--bark);
+      max-width: 50ch;
+      margin-bottom: 2rem;
+    }
+
+    .work-card-stack {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .stack-pill {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      padding: 0.3rem 0.75rem;
+      background: var(--wheat);
+      color: var(--bark);
+      border: 1px solid var(--wheat);
+    }
+
+    .work-card-arrow {
+      position: absolute;
+      top: 3rem;
+      right: 3rem;
+      font-size: 1.5rem;
+      color: var(--clay);
+      transition: transform 0.2s;
+    }
+
+    .work-card:hover .work-card-arrow { transform: translate(4px, -4px); }
+
+    .work-card-placeholder {
+      background: var(--wheat);
+      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+    }
+
+    .work-card-placeholder p {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      color: var(--leather);
+      opacity: 0.6;
+    }
+
+    /* ── ABOUT STRIP ── */
+    .about-strip {
+      padding: 7rem 6rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6rem;
+      align-items: center;
+      background: var(--soil);
+      color: var(--wheat);
+    }
+
+    .about-strip .section-label { color: var(--clay); }
+
+    .about-strip .section-title {
+      color: var(--wheat);
+      margin-bottom: 1.5rem;
+    }
+
+    .about-text {
+      font-size: 1rem;
+      color: var(--parchment);
+      opacity: 0.85;
+      margin-bottom: 2rem;
+    }
+
+    .about-strip .btn-secondary {
+      border-color: var(--clay);
+      color: var(--clay);
+    }
+
+    .about-strip .btn-secondary:hover {
+      background: var(--clay);
+      color: var(--soil);
+    }
+
+    .skills-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1px;
+      background: rgba(232, 213, 176, 0.15);
+    }
+
+    .skill-item {
+      padding: 1.5rem;
+      background: rgba(44, 31, 20, 0.6);
+    }
+
+    .skill-name {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      color: var(--wheat);
+      margin-bottom: 0.25rem;
+    }
+
+    .skill-desc {
+      font-size: 0.78rem;
+      color: var(--clay);
+      opacity: 0.8;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 3rem 6rem;
+      background: var(--bark);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      color: var(--wheat);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--clay);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-links a:hover { color: var(--wheat); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 1; }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 1rem 1.5rem; }
+      .nav-links { gap: 1.5rem; }
+
+      .hero {
+        grid-template-columns: 1fr;
+        min-height: auto;
+      }
+
+      .hero-left { padding: 7rem 2rem 3rem; }
+      .hero::after { display: none; }
+
+      .hero-right {
+        padding: 2rem;
+        min-height: 300px;
+      }
+
+      .hero-stat-block { flex-direction: row; flex-wrap: wrap; gap: 1rem; padding: 1.5rem; }
+      .stat-card { min-width: auto; flex: 1; }
+      .stat-card:nth-child(2),
+      .stat-card:nth-child(3) { margin-left: 0; }
+
+      .section-work { padding: 5rem 2rem; }
+      .work-grid { grid-template-columns: 1fr; }
+
+      .about-strip { grid-template-columns: 1fr; padding: 5rem 2rem; gap: 3rem; }
+
+      footer { flex-direction: column; gap: 1.5rem; padding: 2rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">KM</a>
+    <ul class="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="case-study.html">Work</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-left">
+      <p class="hero-eyebrow">Portfolio</p>
+      <h1 class="hero-name">Kennan<br>Masters</h1>
+      <p class="hero-title">Data Engineer &amp; Problem Solver</p>
+      <p class="hero-bio">Artist and data engineer. Always looking for interesting projects and puzzles to tackle.</p>
+      <div class="hero-cta">
+        <a href="case-study.html" class="btn-primary">View My Work</a>
+        <a href="contact.html" class="btn-secondary">Get In Touch</a>
+      </div>
+    </div>
+
+    <div class="hero-right">
+      <div class="terrain"></div>
+      <div class="terrain-lines">
+        <svg viewBox="0 0 600 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <path d="M0,200 Q150,120 300,180 T600,160" fill="none" stroke="#4a3728" stroke-width="1.5"/>
+          <path d="M0,280 Q200,200 350,260 T600,240" fill="none" stroke="#4a3728" stroke-width="1.5"/>
+          <path d="M0,360 Q100,300 300,340 T600,320" fill="none" stroke="#4a3728" stroke-width="1.5"/>
+          <path d="M0,440 Q250,380 400,420 T600,400" fill="none" stroke="#4a3728" stroke-width="1.5"/>
+          <path d="M0,520 Q150,460 320,500 T600,480" fill="none" stroke="#4a3728" stroke-width="1.5"/>
+          <path d="M0,600 Q200,540 380,580 T600,560" fill="none" stroke="#4a3728" stroke-width="1.5"/>
+          <circle cx="480" cy="200" r="80" fill="none" stroke="#8b5e3c" stroke-width="1"/>
+          <circle cx="480" cy="200" r="55" fill="none" stroke="#8b5e3c" stroke-width="1"/>
+          <circle cx="480" cy="200" r="30" fill="none" stroke="#8b5e3c" stroke-width="1"/>
+        </svg>
+      </div>
+      <div class="hero-stat-block">
+        <div class="stat-card">
+          <div class="stat-number">~$5</div>
+          <div class="stat-label">Monthly Pipeline Cost</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">2.3k</div>
+          <div class="stat-label">Events Tracked</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-number">4</div>
+          <div class="stat-label">Live Dashboards</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WORK -->
+  <section class="section-work">
+    <p class="section-label">Selected Work</p>
+    <h2 class="section-title">Projects &amp; Case Studies</h2>
+    <div class="work-grid">
+      <a href="case-study.html" class="work-card">
+        <span class="work-card-arrow">↗</span>
+        <p class="work-card-tag">Case Study — Data Pipeline</p>
+        <h3 class="work-card-title">Ranch Data Pipeline</h3>
+        <p class="work-card-desc">A lightweight, low-cost data pipeline built for a working cattle ranch. Google Sheets as the data entry layer, synced to Supabase, visualized in Metabase — all for around $5/month.</p>
+        <div class="work-card-stack">
+          <span class="stack-pill">Google Sheets</span>
+          <span class="stack-pill">Apps Script</span>
+          <span class="stack-pill">Supabase</span>
+          <span class="stack-pill">Metabase</span>
+          <span class="stack-pill">Railway</span>
+        </div>
+      </a>
+      <div class="work-card-placeholder">
+        <p>More projects coming soon</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="about-strip">
+    <div>
+      <p class="section-label">About</p>
+      <h2 class="section-title">Building things that work for real people</h2>
+      <p class="about-text">I care about matching the solution to the problem — not reaching for the most sophisticated stack just because it exists. Good data engineering means the right tool, the right cost, and something the client can actually use.</p>
+      <a href="contact.html" class="btn-secondary">Work Together</a>
+    </div>
+    <div class="skills-list">
+      <div class="skill-item">
+        <div class="skill-name">Pipelines</div>
+        <div class="skill-desc">ETL / ELT design</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">SQL</div>
+        <div class="skill-desc">PostgreSQL, Supabase</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">Automation</div>
+        <div class="skill-desc">Apps Script, Python</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">Visualization</div>
+        <div class="skill-desc">Metabase, dashboards</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">Databases</div>
+        <div class="skill-desc">Schema design, views</div>
+      </div>
+      <div class="skill-item">
+        <div class="skill-name">Low-cost infra</div>
+        <div class="skill-desc">Railway, Netlify</div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span class="footer-name">Kennan Masters</span>
+    <ul class="footer-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="case-study.html">Work</a></li>
+      <li><a href="contact.html">Contact</a></li>
+    </ul>
+  </footer>
+
+</body>
+</html>
