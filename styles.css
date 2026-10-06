@@ -19,6 +19,9 @@
   --sage-dark: #3a5c3d;
   --rust:      #e8843e;
   --sky:       #6b8fa3;
+
+  /* headings use the same font as the Evidence dashboard pages */
+  --font-heading: 'DM Sans', system-ui, sans-serif;
 }
 
 /* ── RESET ── */
@@ -135,9 +138,9 @@ nav {
 }
 
 .section-title {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: clamp(2rem, 3.5vw, 3rem);
-  font-weight: 700;
+  font-weight: 600;
   color: var(--soil);
   margin-bottom: 4rem;
   max-width: 20ch;
@@ -153,7 +156,7 @@ footer {
 }
 
 .footer-name {
-  font-family: 'Playfair Display', serif;
+  font-family: var(--font-heading);
   font-size: 1rem;
   color: var(--wheat);
 }
