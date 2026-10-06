@@ -1,0 +1,13 @@
+# kennanmasters.com/ag-data/ is a separate Netlify site (repo: ag-data-evidence).
+# A status of 200 makes this a proxy: visitors stay on kennanmasters.com and the
+# address bar never changes to the other site's address.
+
+[[redirects]]
+  from = "/ag-data"
+  to = "https://ag-data-evidence.netlify.app/ag-data/"
+  status = 200
+
+[[redirects]]
+  from = "/ag-data/*"
+  to = "https://ag-data-evidence.netlify.app/ag-data/:splat"
+  status = 200
