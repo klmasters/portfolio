@@ -16,9 +16,10 @@
 
     /* ── HERO ── */
     .hero {
-      min-height: 100vh;
+      min-height: 70vh;
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      /* artwork | name and bio on cream | artwork */
+      grid-template-columns: 1fr minmax(0, 40rem) 1fr;
       position: relative;
       overflow: hidden;
     }
@@ -27,7 +28,12 @@
       display: flex;
       flex-direction: column;
       justify-content: center;
-      padding: 8rem 4rem 4rem 6rem;
+      align-items: center;
+      text-align: center;
+      padding: 7rem 3rem 4rem;
+      background: var(--cream);
+      border-left: 1px solid rgba(61, 102, 66, 0.15);
+      border-right: 1px solid rgba(61, 102, 66, 0.15);
       position: relative;
       z-index: 2;
     }
@@ -49,26 +55,17 @@
       font-weight: 700;
       line-height: 1.05;
       color: var(--soil);
-      margin-bottom: 0.5rem;
-      opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.4s;
-    }
-
-    .hero-title {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.1rem, 1.8vw, 1.4rem);
-      font-weight: 400;
-      font-style: italic;
-      color: var(--leather);
       margin-bottom: 2rem;
       opacity: 0;
-      animation: fadeUp 0.8s ease forwards 0.55s;
+      animation: fadeUp 0.8s ease forwards 0.4s;
     }
 
     .hero-bio {
       font-size: 1.05rem;
       color: var(--bark);
       max-width: 38ch;
+      margin-left: auto;
+      margin-right: auto;
       margin-bottom: 3rem;
       opacity: 0;
       animation: fadeUp 0.8s ease forwards 0.7s;
@@ -76,18 +73,23 @@
 
     .hero-cta {
       display: flex;
+      justify-content: center;
       gap: 1rem;
       flex-wrap: wrap;
       opacity: 0;
       animation: fadeUp 0.8s ease forwards 0.85s;
     }
 
-    .hero-right {
+    .hero-right,
+    .hero-art-left {
       position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
     }
+
+    /* The left artwork reuses the right one's squares (see <use> in the markup), mirrored. */
+    .hero-art-left .terrain-lines { transform: scaleX(-1); }
 
     .terrain {
       position: absolute;
@@ -97,57 +99,7 @@
     }
 
     .terrain-lines { position: absolute; inset: 0; overflow: hidden; }
-    .terrain-lines svg { width: 100%; height: 100%; opacity: 0.18; }
-
-    .hero-stat-block {
-      position: relative;
-      z-index: 2;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      padding: 3rem;
-      opacity: 0;
-      animation: fadeIn 1s ease forwards 1s;
-    }
-
-    .stat-card {
-      background: rgba(250, 249, 244, 0.85);
-      backdrop-filter: blur(8px);
-      border: 1px solid rgba(61, 102, 66, 0.2);
-      padding: 1.5rem 2rem;
-      min-width: 260px;
-    }
-
-    .stat-card:nth-child(2) { margin-left: 2rem; }
-    .stat-card:nth-child(3) { margin-left: 1rem; }
-
-    .stat-number {
-      font-family: 'Playfair Display', serif;
-      font-size: 2.8rem;
-      font-weight: 700;
-      color: var(--soil);
-      line-height: 1;
-      margin-bottom: 0.25rem;
-    }
-
-    .stat-label {
-      font-family: 'DM Mono', monospace;
-      font-size: 0.68rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--sage);
-    }
-
-    .hero::after {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0;
-      left: 50%;
-      width: 80px;
-      background: var(--cream);
-      transform: skewX(-3deg);
-      z-index: 1;
-    }
+    .terrain-lines svg { width: 100%; height: 100%; opacity: 0.5; }
 
     /* ── WORK ── */
     .section-work {
@@ -296,12 +248,9 @@
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
       .hero { grid-template-columns: 1fr; min-height: auto; }
-      .hero-left { padding: 7rem 2rem 3rem; }
-      .hero::after { display: none; }
+      .hero-art-left { display: none; }
+      .hero-left { padding: 7rem 2rem 3rem; border-left: 0; border-right: 0; }
       .hero-right { padding: 2rem; min-height: 300px; }
-      .hero-stat-block { flex-direction: row; flex-wrap: wrap; gap: 1rem; padding: 1.5rem; }
-      .stat-card { min-width: auto; flex: 1; }
-      .stat-card:nth-child(2), .stat-card:nth-child(3) { margin-left: 0; }
       .section-work { padding: 5rem 2rem; }
       .work-grid { grid-template-columns: 1fr; }
       .about-strip { grid-template-columns: 1fr; padding: 5rem 2rem; gap: 3rem; }
@@ -313,25 +262,30 @@
   <nav></nav>
 
   <section class="hero">
+    <div class="hero-art-left" aria-hidden="true">
+      <div class="terrain"></div>
+      <div class="terrain-lines">
+        <svg width="100%" height="100%" viewBox="16 16 672 740" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg"><use href="#terrain-grid"/></svg>
+      </div>
+    </div>
     <div class="hero-left">
       <p class="hero-eyebrow">Portfolio</p>
       <h1 class="hero-name">Kennan<br>Masters</h1>
-      <p class="hero-title">Data Engineer &amp; Problem Solver</p>
       <p class="hero-bio">Artist and data engineer. Always looking for interesting projects and puzzles to tackle.</p>
       <div class="hero-cta">
-        <a href="/ag-data/" class="btn-primary">Explore the Cattle Data</a>
-        <a href="contact.html" class="btn-secondary">Get In Touch</a>
+        <a href="contact.html" class="btn-primary">Get In Touch</a>
       </div>
     </div>
-    <div class="hero-right">
+    <div class="hero-right" aria-hidden="true">
       <div class="terrain"></div>
       <div class="terrain-lines">
-  <svg width="100%" height="100%" viewBox="0 0 680 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+  <svg width="100%" height="100%" viewBox="16 16 672 740" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
     <style>
       .c0{fill:#1c2e1f}.c1{fill:#2e4d31}.c2{fill:#3d6642}.c3{fill:#5a7a5d}
       .c4{fill:#8aa88d}.c5{fill:#b8ccba}.c6{fill:#dde8d8}.c7{fill:#edf2eb}
       .ca{fill:#c96a2e}.cb{fill:#e8843e}
     </style>
+    <g id="terrain-grid">
     <rect x="16" y="16" width="60" height="60" rx="2" class="c3"/>
     <rect x="84" y="16" width="60" height="60" rx="2" class="c6"/>
     <rect x="152" y="16" width="60" height="60" rx="2" class="c1"/>
@@ -442,22 +396,9 @@
     <rect x="492" y="696" width="60" height="60" rx="2" class="c1"/>
     <rect x="560" y="696" width="60" height="60" rx="2" class="c6"/>
     <rect x="628" y="696" width="60" height="60" rx="2" class="c3"/>
+  </g>
   </svg>
 </div>
-      <div class="hero-stat-block">
-        <div class="stat-card">
-          <div class="stat-number">~$5</div>
-          <div class="stat-label">Monthly Pipeline Cost</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">2.3k</div>
-          <div class="stat-label">Events Tracked</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-number">4</div>
-          <div class="stat-label">Live Dashboards</div>
-        </div>
-      </div>
     </div>
   </section>
 
