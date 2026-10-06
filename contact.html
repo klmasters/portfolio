@@ -9,7 +9,7 @@
   <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
     body { min-height: 100vh; display: flex; flex-direction: column; }
@@ -54,9 +54,9 @@
     }
 
     .left-heading {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--font-heading);
       font-size: clamp(2.5rem, 4vw, 4rem);
-      font-weight: 700;
+      font-weight: 600;
       color: var(--wheat);
       line-height: 1.1;
       margin-bottom: 1.5rem;
@@ -110,9 +110,9 @@
     }
 
     .form-heading {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--font-heading);
       font-size: 1.4rem;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--soil);
       margin-bottom: 2.5rem;
     }
@@ -182,7 +182,7 @@
     .success-icon { font-size: 3rem; margin-bottom: 1rem; }
 
     .success-heading {
-      font-family: 'Playfair Display', serif;
+      font-family: var(--font-heading);
       font-size: 1.6rem;
       color: var(--soil);
       margin-bottom: 0.75rem;
