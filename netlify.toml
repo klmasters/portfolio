@@ -11,3 +11,18 @@
   from = "/ag-data/*"
   to = "https://ag-data-evidence.netlify.app/ag-data/:splat"
   status = 200
+
+# kennanmasters.com/ranch-demo/ is the cattle demo, hosted on Cloudflare Pages
+# (repo: cattle-demo-evidence). Same proxy idea as above. Netlify bills the proxied
+# bandwidth and requests as credits, so if that becomes a problem, remove these two rules
+# and link to a subdomain that points straight at Cloudflare instead.
+
+[[redirects]]
+  from = "/ranch-demo"
+  to = "https://cattle-demo.pages.dev/ranch-demo/"
+  status = 200
+
+[[redirects]]
+  from = "/ranch-demo/*"
+  to = "https://cattle-demo.pages.dev/ranch-demo/:splat"
+  status = 200
