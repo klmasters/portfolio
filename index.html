@@ -111,7 +111,7 @@
 
     .work-grid {
       display: grid;
-      grid-template-columns: 2fr 1fr;
+      grid-template-columns: 1fr 1fr;
       gap: 2px;
       background: var(--wheat);
     }
@@ -188,6 +188,7 @@
     .work-card:hover .work-card-arrow { transform: translate(4px, -4px); }
 
     .work-card-placeholder {
+      grid-column: 1 / -1; /* full row under the project cards */
       background: var(--wheat);
       padding: 3rem;
       display: flex;
