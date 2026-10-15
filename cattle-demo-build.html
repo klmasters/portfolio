@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How the Cattle Demo Was Built — Kennan Masters</title>
+  <meta name="description" content="The architecture, design decisions, guardrails and hang-ups behind the cattle management demo, built entirely on free tiers." />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/project.css" />
+</head>
+<body>
+  <nav></nav>
+
+  <main class="project">
+    <div class="project-wide">
+      <div class="project-inner">
+        <p><a class="back-link" href="/cattle-demo.html">← Back to the project page</a></p>
+        <p class="meta-line">Cattle Management Demo</p>
+        <h1>How the cattle demo was built</h1>
+        <p class="lede">The architecture, the decisions behind it, and the parts that went wrong.</p>
+        <div class="toc" role="navigation" aria-label="On this page">
+          <p>On this page</p>
+          <ul>
+            <li><a href="#shape">The shape of it</a></li>
+            <li><a href="#cost">Designed to cost almost nothing</a></li>
+            <li><a href="#decisions">Decisions</a></li>
+            <li><a href="#guardrails">Guardrails for a public database</a></li>
+            <li><a href="#who">Who did what</a></li>
+            <li><a href="#wrong">Things that went wrong</a></li>
+            <li><a href="#code">The code</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <h2 id="shape" class="project-inner">The shape of it</h2>
+      <p class="gallery-note" style="margin-bottom:0.5rem!important">On a phone, swipe the diagram sideways.</p>
+      <div class="diagram">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 430" role="img" aria-labelledby="t d" font-family="'DM Sans', system-ui, sans-serif">
+  <title id="t">How the cattle demo works</title>
+  <desc id="d">A spreadsheet, CSV or Google Sheet goes to an upload function that checks it, then into a Postgres database. A deploy hook rebuilds the site, which produces the dashboards. Scheduled GitHub jobs void old uploads and rebuild after a void.</desc>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3d6642"/>
+    </marker>
+    <marker id="arro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#e8843e"/>
+    </marker>
+  </defs>
+  <rect width="1000" height="430" fill="#faf9f4"/>
+
+  <!-- lane labels -->
+  <text x="24" y="30" font-family="'DM Mono', monospace" font-size="11" letter-spacing="1.6" fill="#3a5c3d">UPLOAD FLOW</text>
+  <text x="24" y="318" font-family="'DM Mono', monospace" font-size="11" letter-spacing="1.6" fill="#3a5c3d">SCHEDULED JOBS</text>
+
+  <!-- 1 sources -->
+  <rect x="24" y="64" width="150" height="150" rx="8" fill="#fff" stroke="#3d6642" stroke-opacity=".35"/>
+  <text x="99" y="92" text-anchor="middle" font-size="15" font-weight="600" fill="#2e4d31">Your file</text>
+  <text x="99" y="124" text-anchor="middle" font-size="13" fill="#2e4d31">Excel (.xlsx)</text>
+  <text x="99" y="148" text-anchor="middle" font-size="13" fill="#2e4d31">CSV</text>
+  <text x="99" y="172" text-anchor="middle" font-size="13" fill="#2e4d31">Google Sheet link</text>
+  <text x="99" y="200" text-anchor="middle" font-size="11" fill="#6b7a6c">Events + Transactions</text>
+
+  <!-- 2 upload function -->
+  <rect x="226" y="64" width="210" height="150" rx="8" fill="#fff" stroke="#3d6642" stroke-width="2"/>
+  <text x="331" y="92" text-anchor="middle" font-size="15" font-weight="600" fill="#2e4d31">Upload function</text>
+  <text x="331" y="110" text-anchor="middle" font-size="11" fill="#6b7a6c">Cloudflare</text>
+  <text x="331" y="138" text-anchor="middle" font-size="13" fill="#2e4d31">1. Bot check</text>
+  <text x="331" y="158" text-anchor="middle" font-size="13" fill="#2e4d31">2. Rate limit</text>
+  <text x="331" y="178" text-anchor="middle" font-size="13" fill="#2e4d31">3. Parse the file</text>
+  <text x="331" y="198" text-anchor="middle" font-size="13" fill="#2e4d31">4. Check every row</text>
+
+  <!-- 3 database -->
+  <rect x="488" y="64" width="210" height="150" rx="8" fill="#fff" stroke="#3d6642" stroke-width="2"/>
+  <text x="593" y="92" text-anchor="middle" font-size="15" font-weight="600" fill="#2e4d31">Postgres</text>
+  <text x="593" y="110" text-anchor="middle" font-size="11" fill="#6b7a6c">Neon</text>
+  <text x="593" y="138" text-anchor="middle" font-size="13" fill="#2e4d31">Append-only event log</text>
+  <text x="593" y="158" text-anchor="middle" font-size="13" fill="#2e4d31">Upload batches (can be voided)</text>
+  <text x="593" y="178" text-anchor="middle" font-size="13" fill="#2e4d31">"Current herd" view</text>
+  <text x="593" y="200" text-anchor="middle" font-size="11" fill="#6b7a6c">saved in one transaction</text>
+
+  <!-- 4 rebuild + 5 dashboards stacked right -->
+  <rect x="750" y="64" width="226" height="68" rx="8" fill="#fff" stroke="#3d6642" stroke-width="2"/>
+  <text x="863" y="92" text-anchor="middle" font-size="15" font-weight="600" fill="#2e4d31">Rebuild</text>
+  <text x="863" y="114" text-anchor="middle" font-size="12" fill="#2e4d31">Evidence reads the database</text>
+  <rect x="750" y="164" width="226" height="50" rx="8" fill="#3d6642"/>
+  <text x="863" y="195" text-anchor="middle" font-size="15" font-weight="600" fill="#faf9f4">Four dashboards (static site)</text>
+
+  <!-- main arrows -->
+  <line x1="176" y1="139" x2="222" y2="139" stroke="#3d6642" stroke-width="2" marker-end="url(#arr)"/>
+  <line x1="438" y1="139" x2="484" y2="139" stroke="#3d6642" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="461" y="128" text-anchor="middle" font-size="10" fill="#6b7a6c">all rows pass</text>
+  <!-- DB to rebuild: the build reads the data -->
+  <line x1="700" y1="98" x2="746" y2="98" stroke="#3d6642" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="723" y="86" text-anchor="middle" font-size="10" fill="#6b7a6c">read at build</text>
+  <!-- upload function calls the deploy hook after a save: orange path over the top -->
+  <path d="M331 62 L331 46 L863 46 L863 60" fill="none" stroke="#e8843e" stroke-width="2" marker-end="url(#arro)"/>
+  <text x="597" y="39" text-anchor="middle" font-size="11" fill="#b4601f">after a save: deploy hook starts a rebuild</text>
+  <line x1="863" y1="134" x2="863" y2="160" stroke="#3d6642" stroke-width="2" marker-end="url(#arr)"/>
+
+  <!-- rejection note -->
+  <path d="M331 216 L331 250" stroke="#e8843e" stroke-width="2" fill="none" marker-end="url(#arro)"/>
+  <text x="331" y="270" text-anchor="middle" font-size="12" fill="#b4601f">Any problem: nothing is saved,</text>
+  <text x="331" y="286" text-anchor="middle" font-size="12" fill="#b4601f">the visitor sees the sheet, row and column</text>
+
+  <!-- scheduled jobs lane -->
+  <rect x="488" y="334" width="210" height="72" rx="8" fill="#fff" stroke="#3d6642" stroke-opacity=".35" stroke-dasharray="5 4"/>
+  <text x="593" y="360" text-anchor="middle" font-size="14" font-weight="600" fill="#2e4d31">Daily: void old uploads</text>
+  <text x="593" y="380" text-anchor="middle" font-size="12" fill="#2e4d31">batches older than 7 days</text>
+  <text x="593" y="396" text-anchor="middle" font-size="11" fill="#6b7a6c">GitHub Actions</text>
+  <line x1="593" y1="332" x2="593" y2="218" stroke="#3d6642" stroke-width="2" marker-end="url(#arr)"/>
+
+  <rect x="750" y="334" width="226" height="72" rx="8" fill="#fff" stroke="#3d6642" stroke-opacity=".35" stroke-dasharray="5 4"/>
+  <text x="863" y="360" text-anchor="middle" font-size="14" font-weight="600" fill="#2e4d31">Hourly: void check</text>
+  <text x="863" y="380" text-anchor="middle" font-size="12" fill="#2e4d31">rebuild if a batch was voided</text>
+  <text x="863" y="396" text-anchor="middle" font-size="11" fill="#6b7a6c">GitHub Actions</text>
+  <path d="M976 370 L990 370 L990 98 L980 98" fill="none" stroke="#e8843e" stroke-width="2" marker-end="url(#arro)"/>
+  <text x="984" y="236" text-anchor="end" font-size="10" fill="#b4601f" transform="rotate(-90 984 236)">deploy hook</text>
+</svg>
+      </div>
+    </div>
+
+    <div class="project-inner">
+      <p>The site is static: Evidence queries the database when it builds and ships the results as files, so visitors never touch the database. The only live code is the upload function, which runs on Cloudflare.</p>
+
+      <h2 id="cost">Designed to cost almost nothing</h2>
+      <p>The only bill is the domain, about $11 a year. Everything else is on a free plan, and the free plans' limits are what shaped most of the design:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tool</th><th>What it does here</th><th>The limit that mattered</th><th>What it changed</th></tr></thead>
+          <tbody>
+            <tr><td>Neon (Postgres)</td><td>The database</td><td>0.5 GB of storage, and the database sleeps when idle</td><td>Dashboards read their data at build time, so a sleeping database never breaks them.</td></tr>
+            <tr><td>Cloudflare Pages</td><td>Hosts the site and runs the upload function</td><td>About 500 builds a month; no single file over 25 MB</td><td>One rebuild per saved upload, with a limit on how often one person can upload. The database engine files load from a CDN.</td></tr>
+            <tr><td>Netlify</td><td>Serves my portfolio and the Kansas data site</td><td>300 credits a month, 15 per deploy</td><td>The demo lives on Cloudflare instead, and Netlify deploys are batched.</td></tr>
+            <tr><td>GitHub Actions</td><td>The weekly data loads, the clean-up job and the void check</td><td>Free on public repos</td><td>Small scheduled jobs do the recurring work, so no server stays running.</td></tr>
+            <tr><td>Cloudflare Turnstile</td><td>The bot check</td><td>Free</td><td>Protects the free quotas from abuse.</td></tr>
+            <tr><td>Evidence</td><td>Builds the dashboards</td><td>Open source</td><td>A static site: nothing runs per visitor.</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>Two habits came out of this. First, keep the site static, so visitors cost nothing and only an upload costs a build. Second, treat every public write path as something that could eat a quota: the bot check, the hourly limit, the file caps and the seven-day clean-up protect the free plans as much as the data.</p>
+
+      <h2 id="decisions">Decisions</h2>
+      <p><strong>An append-only event log.</strong> Every upload adds events and nothing is ever changed or deleted. The herd's current state is a database view that takes each animal's latest event. A bad upload is handled by marking its batch as voided, which removes it from every view without losing the record. That gives an audit trail for free and makes uploads safe to repeat.</p>
+      <p><strong>All-or-nothing validation.</strong> Every row is checked before anything is written: required fields, allowed values, real dates, sensible weights, and rules that depend on the database, such as no events recorded after an animal was sold. If any row fails, nothing is saved, and the response names the sheet, row and column of every problem. A half-loaded file is worse than a rejected one.</p>
+      <p><strong>Duplicate detection by content.</strong> Each upload is fingerprinted from its cleaned contents, not its file name or format, so the same data sent again as a CSV, an Excel file or a Google Sheet is recognised and refused.</p>
+      <p><strong>Transactions, not row-by-row inserts.</strong> The batch record, the events and the transactions are written in one database transaction, so a failure leaves nothing behind.</p>
+      <p><strong>One database login per job.</strong> The dashboards read with a read-only role. The upload function can insert but not update or delete. The clean-up job can change only one column. A leaked credential can do only what that one job needs.</p>
+      <p><strong>Rebuilds on demand, within a budget.</strong> The free hosting plan allows about 500 builds a month. Each saved upload triggers one build, and a separate hourly check catches batches that I void by hand. A fixed schedule would spend builds when nothing had changed and still leave a new upload waiting for the next tick.</p>
+
+      <h2 id="guardrails">Guardrails for a public database</h2>
+      <p>Anyone can write to this demo, so it has several layers:</p>
+      <ul>
+        <li>A bot check (Cloudflare Turnstile), verified on the server before any file is read.</li>
+        <li>A limit of five saved uploads per visitor per hour. The visitor is identified by a keyed hash of the address, so no addresses are stored.</li>
+        <li>File limits: 1 MB, 500 rows per tab, short notes.</li>
+        <li>Parameterised SQL everywhere, so uploaded text can never become a command.</li>
+        <li>Google links are accepted only from docs.google.com, and the export address is built on the server, so the function cannot be pointed at another site.</li>
+        <li>A daily job that marks uploads older than seven days as voided.</li>
+      </ul>
+
+      <h2 id="who">Who did what</h2>
+      <p>I am a data person first. The data work on this project is mine: what an event is and how animals, events and transactions relate; which questions each dashboard should answer; what a believable simulated herd looks like and whether its numbers add up; and the logic behind every figure on the dashboards.</p>
+      <p>I used Claude, Anthropic's AI assistant, for the engineering around that: the upload function and its checks, the tests, the database permissions, the hosting and automation setup, and a lot of the debugging.</p>
+
+      <h2 id="wrong">Things that went wrong</h2>
+      <p><strong>Leaving Metabase and Railway for Evidence.</strong> This whole project started on Supabase and Metabase, with Metabase hosted on Railway. I never loved Metabase. It carries its own branding, so to make the dashboards look like part of my site I had to embed them with iframes. Keeping it running on Railway cost about $12 a month, which did not seem worth it for a portfolio demo. I switched to Evidence because it gives me much more control over the layout, and because everything lives in git: the pages, the queries and the styling are plain files I can review, version and rebuild, instead of settings stored inside a tool.</p>
+      <p><strong>Supabase to Neon.</strong> Evidence and Supabase never connected smoothly. There were workarounds, but it was always more fiddly than it should have been. Then I left the project paused for too long, the free Supabase project was turned off, and because it was a free account I could not get help bringing it back. I moved the database to Neon. I was worried about Neon putting the database to sleep when it is idle, but this data is not busy, and Evidence loads the data when it builds, so the dashboards never wait on the database and cannot break while it sleeps. It wakes quickly when an upload arrives. The same move later rescued my <a href="/ag-data/">Kansas cattle market data project</a>, which was on Supabase too. The lesson: keep the schema and the loaders in the repo, so the database is something I can rebuild and not something I have to protect.</p>
+      <p><strong>Planning around build credits.</strong> I originally planned to host the demo on Netlify, next to the rest of my site. But Netlify's free plan meters deploys in credits, and my Kansas data project was already using most of them. A demo that rebuilds every time someone uploads would have burned through the rest within days, so before launching I moved the demo to Cloudflare Pages, which has a much larger free build allowance. The portfolio still serves it under its own address through a proxy.</p>
+      <p><strong>A file too big for the host.</strong> Cloudflare Pages rejects any file over 25 MB, and the in-browser database engine that Evidence ships is bigger than that. I wrote a build step that removes those two files and points the site at the identical files on a public CDN. As a side effect, first-time visitors download less from my hosting.</p>
+      <p><strong>A page with no queries.</strong> The upload page stopped starting up, and the bot check never appeared. Evidence writes a data file for each page that has queries, and the upload page had none, so the server answered the missing file with an HTML page and a success code. Evidence tried to read that as data and gave up. Adding one small, useful query fixed it. The lesson is to check what a "success" response actually contains.</p>
+
+      <h2 id="code">The code</h2>
+      <p>The dashboards and the upload function are in the <a href="https://github.com/klmasters/cattle-demo-evidence">cattle-demo-evidence</a> repository on GitHub.</p>
+      <p><a class="back-link" href="/cattle-demo.html">← Back to the project page</a></p>
+    </div>
+  </main>
+
+  <footer></footer>
+  <script src="/components.js"></script>
+</body>
+</html>

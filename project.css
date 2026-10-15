@@ -1,0 +1,115 @@
+/* =============================================================
+   PROJECT PAGES (cattle-demo.html and its "how it was built" page).
+   Uses the colors and fonts from styles.css. New project pages can reuse this file.
+   ============================================================= */
+
+.project { padding: 8rem max(1.5rem, calc((100% - 70rem) / 2)) 5rem; }
+/* Everything shares one left edge: text in a narrow column, gallery and diagram full width. */
+.project-inner { max-width: 46rem; margin: 0; }
+.project-wide  { max-width: 70rem; margin: 0; }
+
+.project h1 {
+  font-family: var(--font-heading);
+  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  font-weight: 600;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--soil);
+  margin: 0.5rem 0 1rem;
+}
+.project h2 {
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: 600;
+  color: var(--soil);
+  margin: 3.5rem 0 1rem;
+  scroll-margin-top: 5rem;
+}
+.project h3 { font-family: var(--font-heading); font-size: 1.15rem; font-weight: 600; margin: 2rem 0 0.5rem; color: var(--bark); }
+.project p, .project li { font-size: 1.05rem; color: var(--soil); }
+.project p { margin-bottom: 1.1rem; }
+.project ul, .project ol { margin: 0 0 1.25rem 1.4rem; }
+.project li { margin-bottom: 0.5rem; }
+.project a { color: var(--leather); text-underline-offset: 3px; }
+.project a:hover { color: var(--rust); }
+.project strong { font-weight: 600; }
+.project code { font-family: 'DM Mono', monospace; font-size: 0.9em; background: var(--parchment); padding: 0.1em 0.35em; border-radius: 3px; }
+
+.lede { font-size: 1.3rem !important; line-height: 1.5; color: var(--bark) !important; font-weight: 400; max-width: 38rem; }
+
+.meta-line { font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--sage); margin-bottom: 1.25rem; line-height: 1.9; }
+.meta-line .dot { margin: 0 0.5rem; color: var(--rust); }
+
+.pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1.75rem; }
+.pill { font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.06em; padding: 0.3rem 0.7rem; border: 1px solid rgba(61, 102, 66, 0.35); color: var(--sage-dark); border-radius: 100px; background: var(--cream); }
+
+.cta-row { display: flex; flex-wrap: wrap; gap: 1rem; margin: 0 0 3rem; }
+.project .btn-primary, .project .btn-secondary { color: inherit; }
+.project .btn-primary { color: var(--wheat); }
+.project .btn-primary:hover { color: var(--wheat); }
+.project .btn-secondary { color: var(--leather); }
+.project .btn-secondary:hover { color: var(--cream); }
+
+.back-link { font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase; text-decoration: none; }
+
+/* ── Screenshot gallery ── */
+.gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin: 0 0 1rem; }
+.shot { all: unset; box-sizing: border-box; cursor: zoom-in; display: block; background: var(--cream); border: 1px solid rgba(61, 102, 66, 0.2); border-radius: 6px; overflow: hidden; transition: box-shadow 0.2s, transform 0.2s; }
+.shot:hover, .shot:focus-visible { box-shadow: 0 6px 22px rgba(28, 46, 31, 0.14); transform: translateY(-2px); outline: none; }
+.shot:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
+.shot img { display: block; width: 100%; aspect-ratio: 16 / 11; object-fit: cover; object-position: top; border-bottom: 1px solid rgba(61, 102, 66, 0.15); }
+.shot span { display: block; padding: 0.7rem 0.9rem 0.8rem; font-size: 0.85rem; line-height: 1.35; color: var(--soil); }
+.shot b { display: block; font-weight: 600; }
+.shot small { color: var(--sage); font-size: 0.75rem; }
+.gallery-note { font-size: 0.85rem !important; color: var(--sage) !important; margin-bottom: 3rem !important; }
+
+dialog.lightbox { border: 0; padding: 0; background: transparent; max-width: min(1300px, 96vw); width: 96vw; max-height: 94vh; }
+dialog.lightbox::backdrop { background: rgba(28, 46, 31, 0.78); }
+.lightbox-frame { background: var(--cream); border-radius: 8px; overflow: auto; max-height: 94vh; position: relative; }
+.lightbox-frame img { display: block; width: 100%; height: auto; }
+.lightbox-bar { font-family: var(--font-heading); font-weight: 600; position: sticky; top: 0; display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 1rem; background: var(--cream); border-bottom: 1px solid rgba(61, 102, 66, 0.2); font-size: 0.9rem; z-index: 1; }
+.lightbox-bar button { font: inherit; font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; background: none; border: 1.5px solid var(--leather); color: var(--leather); padding: 0.35rem 0.9rem; cursor: pointer; }
+.lightbox-bar button:hover { background: var(--leather); color: var(--cream); }
+
+/* ── Updates log ── */
+.updates { list-style: none; margin: 0 0 2rem; padding: 0; border-left: 2px solid var(--wheat); }
+.updates li { padding: 0 0 1.1rem 1.25rem; position: relative; margin: 0; }
+.updates li::before { content: ''; position: absolute; left: -6px; top: 0.6rem; width: 10px; height: 10px; border-radius: 50%; background: var(--rust); }
+.updates time { display: block; font-family: 'DM Mono', monospace; font-size: 0.72rem; letter-spacing: 0.08em; color: var(--sage-dark); }
+
+/* ── Callout and two-column list ── */
+.callout { background: var(--parchment); border-left: 3px solid var(--leather); padding: 1.1rem 1.4rem; margin: 1.5rem 0 2rem; border-radius: 0 4px 4px 0; }
+.callout p { margin: 0 0 0.6rem; }
+.callout p:last-child { margin: 0; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 0 2.5rem; }
+.two-col h3 { margin-top: 0.5rem; }
+
+/* ── Page contents ── */
+.toc { background: var(--parchment); padding: 1.1rem 1.6rem; border-radius: 4px; margin: 2rem 0 0; }
+.toc p { font-family: 'DM Mono', monospace; font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--sage); margin: 0 0 0.4rem; }
+.toc ul { list-style: none; margin: 0; padding: 0; columns: 2; column-gap: 2rem; }
+.toc li { margin: 0 0 0.25rem; font-size: 0.95rem; }
+
+/* ── Diagram and table ── */
+.diagram { margin: 1.5rem 0 1.5rem; border: 1px solid rgba(61, 102, 66, 0.2); border-radius: 6px; overflow: hidden; background: var(--cream); }
+.diagram svg { display: block; width: 100%; height: auto; }
+.table-wrap { overflow-x: auto; margin: 1.25rem 0 1.75rem; border: 1px solid rgba(61, 102, 66, 0.2); border-radius: 6px; }
+.project table { border-collapse: collapse; width: 100%; min-width: 40rem; font-size: 0.92rem; }
+.project th { text-align: left; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage-dark); background: var(--parchment); padding: 0.7rem 0.9rem; font-weight: 400; }
+.project td { padding: 0.75rem 0.9rem; vertical-align: top; border-top: 1px solid rgba(61, 102, 66, 0.15); line-height: 1.5; }
+.project td:first-child { font-weight: 600; white-space: nowrap; }
+
+@media (max-width: 900px) {
+  .gallery { grid-template-columns: repeat(2, 1fr); }
+  .project { padding-top: 6.5rem; }
+}
+@media (max-width: 700px) {
+  /* The diagram keeps a readable size and scrolls sideways instead of shrinking. */
+  .diagram { overflow-x: auto; }
+  .diagram svg { min-width: 680px; }
+}
+@media (max-width: 600px) {
+  .gallery { grid-template-columns: 1fr; }
+  .two-col, .toc ul { columns: 1; grid-template-columns: 1fr; }
+  .cta-row .btn-primary, .cta-row .btn-secondary { flex: 1 1 100%; text-align: center; }
+}
