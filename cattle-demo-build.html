@@ -43,7 +43,7 @@
       <div class="diagram">
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 560" role="img" aria-labelledby="t d" font-family="'DM Sans', system-ui, sans-serif">
   <title id="t">How the cattle demo works</title>
-  <desc id="d">A spreadsheet, CSV or Google Sheet goes to an upload function that checks it, then into a Postgres database. A rebuild reads the data and produces the dashboards. Scheduled GitHub jobs void old uploads and rebuild after a void.</desc>
+  <desc id="d">A spreadsheet, CSV or Google Sheet goes to an upload function that checks it, then into a Postgres database. A rebuild reads the data and produces the dashboards. A second function reads the current herd and builds a pre-filled template to start from. Scheduled GitHub jobs void old uploads and rebuild after a void.</desc>
   <defs>
     <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
       <path d="M0 0 L10 5 L0 10 z" fill="#3d6642"/>
@@ -99,12 +99,24 @@
   <text x="760.0" y="326" text-anchor="middle" font-size="10" fill="#6b7a6c">GitHub Actions</text>
   <line x1="760.0" y1="336" x2="760.0" y2="406" stroke="#e8843e" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arro)"/>
   <text x="772.0" y="375.0" text-anchor="start" font-size="11" fill="#b4601f">deploy hook</text>
+  <text x="634" y="46" text-anchor="start" font-size="11" fill="#3a5c3d" font-family="'DM Mono', monospace" letter-spacing="1.6">TEMPLATE FLOW</text>
+  <rect x="634" y="60" width="252" height="118" rx="8" fill="#fff" stroke="#3d6642" stroke-width="2"/>
+  <text x="760.0" y="84" text-anchor="middle" font-size="15" font-weight="600" fill="#2e4d31">Template function</text>
+  <text x="760.0" y="102" text-anchor="middle" font-size="11" fill="#6b7a6c">Cloudflare</text>
+  <text x="760.0" y="128" text-anchor="middle" font-size="13" fill="#2e4d31">1. Bot check</text>
+  <text x="760.0" y="148" text-anchor="middle" font-size="13" fill="#2e4d31">2. Read the current herd</text>
+  <text x="760.0" y="168" text-anchor="middle" font-size="13" fill="#2e4d31">3. Fill in the rows</text>
+  <line x1="632" y1="105" x2="518" y2="105" stroke="#3d6642" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="575.0" y="96" text-anchor="middle" font-size="11" fill="#3a5c3d">pre-filled file</text>
+  <polyline points="516,395 600,395 600,140 630,140" fill="none" stroke="#3d6642" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+  <text x="592.0" y="256" text-anchor="end" font-size="11" fill="#3a5c3d">reads</text>
+  <text x="592.0" y="271" text-anchor="end" font-size="11" fill="#3a5c3d">the herd</text>
 </svg>
       </div>
     </div>
 
     <div class="project-inner">
-      <p>The site is static: Evidence queries the database when it builds and ships the results as files, so visitors never touch the database. The only live code is the upload function, which runs on Cloudflare.</p>
+      <p>The site is static: Evidence queries the database when it builds and ships the results as files, so visitors never touch the database. The only live code is two small functions on Cloudflare: one takes uploads and the other builds pre-filled templates.</p>
 
       <h2 id="cost">Designed to cost almost nothing</h2>
       <p>The only bill is the domain, about $11 a year. Everything else is on a free plan, and the free plans' limits are what shaped most of the design:</p>
@@ -113,7 +125,7 @@
           <thead><tr><th>Tool</th><th>What it does here</th><th>The limit</th><th>What it changed</th></tr></thead>
           <tbody>
             <tr><td>Neon (Postgres)</td><td>The database</td><td>0.5 GB of storage, and the database sleeps when idle</td><td>Dashboards read their data at build time, so a sleeping database never breaks them.</td></tr>
-            <tr><td>Cloudflare Pages</td><td>Hosts the site and runs the upload function</td><td>About 500 builds a month; no single file over 25 MB</td><td>One rebuild per saved upload, with a limit on how often one person can upload. The database engine files load from a CDN.</td></tr>
+            <tr><td>Cloudflare Pages</td><td>Hosts the site and runs the upload and template functions</td><td>About 500 builds a month; no single file over 25 MB</td><td>One rebuild per saved upload, with a limit on how often one person can upload. The database engine files load from a CDN.</td></tr>
             <tr><td>Netlify</td><td>Serves my portfolio and the Kansas data site</td><td>300 credits a month, 15 per deploy</td><td>The demo lives on Cloudflare instead, and Netlify deploys are batched.</td></tr>
             <tr><td>GitHub Actions</td><td>The weekly data loads, the clean-up job and the void check</td><td>Free on public repos</td><td>Small scheduled jobs do the recurring work, so no server stays running.</td></tr>
             <tr><td>Cloudflare Turnstile</td><td>The bot check</td><td>Free</td><td>Protects the free quotas from abuse.</td></tr>
@@ -126,12 +138,14 @@
       <p><strong>An append-only event log.</strong> Every upload adds events and nothing is ever changed or deleted. The herd's current state is a database view that takes each animal's latest event. A bad upload is handled by marking its batch as voided, which removes it from every view without losing the record. That gives an audit trail for free and makes uploads safe to repeat.</p>
       <p><strong>All-or-nothing validation.</strong> Every row is checked before anything is written: required fields, allowed values, real dates, sensible weights, and rules that depend on the database, such as no events recorded after an animal was sold. If any row fails, nothing is saved, and the response names the sheet, row and column of every problem.</p>
       <p><strong>Duplicate detection by content.</strong> Each upload is fingerprinted from its cleaned contents, so the same data sent again as a CSV, an Excel file or a Google Sheet is recognised and refused.</p>
+      <p><strong>Pre-filled templates by editing the template file.</strong> The template download does not build a spreadsheet from scratch. It opens the real template, which is a zip of XML files, writes the rows into the right cells and zips it again. Most spreadsheet libraries that run inside a Cloudflare function cannot write dropdown lists, and the ones that can are large, so editing the file keeps every dropdown, note and format the template already has. A birth template lists the cows still on the ranch whose latest pregnancy check has no birth after it, the same definition the Pregnancy &amp; Calving dashboard uses.</p>
+      <p><strong>A shortcut for the Transactions tab.</strong> After typing a purchase's tags on the Events tab, the Transactions tab asked for the same tags again as a comma-separated list. Now a transaction row with no tags covers every purchase (or sale) dated that day, and the head count and total are worked out. A row that lists its tags follows the original rules. The response notes which tags were filled in, so it is never a silent guess, and two blank rows on one date are refused as ambiguous.</p>
       <p><strong>One database login per job.</strong> The dashboards read with a read-only role. The upload function can insert but not update or delete. The clean-up job can change only one column. A leaked credential can do only what that one job needs.</p>
       
       <h2 id="guardrails">Guardrails for a public database</h2>
       <p>Anyone can write to this demo, so it has several security layers:</p>
       <ul>
-        <li>A bot check (Cloudflare Turnstile), verified on the server before any file is read.</li>
+        <li>A bot check (Cloudflare Turnstile), verified on the server before any file is read. The template download sits behind the same check, so a script cannot keep waking the database.</li>
         <li>A limit of five saved uploads per visitor per hour. The visitor is identified by a keyed hash of the address, so no addresses are stored.</li>
         <li>File limits: 1 MB, 500 rows per tab, short notes.</li>
         <li>Parameterised SQL everywhere, so uploaded text can never become a command.</li>

@@ -24,7 +24,7 @@
         <p class="meta-line">Project<span class="dot">·</span>Dashboard demo</p>
         <h1>Cattle Management Demo</h1>
         <p class="lede"> Manage a cattle herd with a spreadsheet.</p>
-        <p class="meta-line">Live demo<span class="dot">·</span>Simulated data<span class="dot">·</span>Last updated Oct 15, 2026</p>
+        <p class="meta-line">Live demo<span class="dot">·</span>Simulated data<span class="dot">·</span>Last updated Oct 16, 2026</p>
         <div class="pills">
           <span class="pill">Python</span>
           <span class="pill">Neon Postgres</span>
@@ -38,7 +38,7 @@
         </div>
       </div>
 
-      <div class="gallery" aria-label="Screenshots">
+      <div class="gallery gallery-4" aria-label="Screenshots">
         <button type="button" class="shot" data-full="/images/cattle-demo/financial.png" data-title="Financial">
           <img src="/images/cattle-demo/financial.png" alt="Financial dashboard: spent, earned and net position, purchases and sales by year, money in and out by month, and recent transactions" loading="lazy" />
           <span><b>Financial</b><small>Captured Oct 15, 2026</small></span>
@@ -47,9 +47,13 @@
           <img src="/images/cattle-demo/animal-lookup.png" alt="Animal Lookup dashboard showing one calf's summary, event history, weight history and events by type" loading="lazy" />
           <span><b>Animal Lookup</b><small>Captured Oct 15, 2026</small></span>
         </button>
-        <button type="button" class="shot" data-full="/images/cattle-demo/upload-error.png" data-title="Upload page, with a rejected file">
-          <img src="/images/cattle-demo/upload-error.png" alt="Upload page after a rejected file, listing four problems with the sheet, row and column of each" loading="lazy" />
-          <span><b>Upload page, rejecting a bad file</b><small>Captured Oct 15, 2026</small></span>
+        <button type="button" class="shot" data-full="/images/cattle-demo/upload-page.png" data-title="Add Events to the Data">
+          <img src="/images/cattle-demo/upload-page.png" alt="The Add Events to the Data page with the birth template chosen: options for pre-filled templates, a form with a date and filters, and the upload form below it" loading="lazy" />
+          <span><b>Add Events page, building a birth template</b><small>Captured Oct 16, 2026</small></span>
+        </button>
+        <button type="button" class="shot" data-full="/images/cattle-demo/upload-error.png" data-title="Upload, with a rejected file">
+          <img src="/images/cattle-demo/upload-error.png" alt="The same page after a rejected file, listing four problems with the sheet, row and column of each" loading="lazy" />
+          <span><b>Upload, rejecting a bad file</b><small>Captured Oct 16, 2026</small></span>
         </button>
       </div>
     </div>
@@ -57,6 +61,7 @@
     <div class="project-inner">
       <h2>What it is</h2>
       <p>A small cattle-records system built to help visulize and manage herd changes. Logs are tracked using a spreadsheet and uploaded on a webpage.</p>
+      <p>The upload page can also build the spreadsheet for you. Say what happened and when (a vaccination, a calving, a purchase) and you get a template with the rows already started, so you only type what is new.</p>
       <p>This data is simulated using a Python scrip: about 200 head and five years of simulated events.</p>
 
       <h2>Built to run for free</h2>
@@ -72,10 +77,10 @@
 
       <h2 id="how-to-use">How to use it</h2>
       <ol>
-        <li><strong>Open the upload page</strong> and download the Excel template.</li>
-        <li><strong>Fill in a few rows.</strong> The Events tab takes one row per event that happened to an animal. The columns you must fill are the tag number, the date, the event type (birth, purchase, weight, vaccination, pregnant, sold or deceased), the location, the breed and the type (cow, bull or calf). The dropdowns in the template list the allowed values. The Transactions tab is optional and is for purchases and sales with money attached. The Herd tab is a list of the animals already in the demo, so you can reuse their tags.</li>
+        <li><strong>Open the upload page</strong> and choose what happened: a vaccination, weighing, pregnancy check, sale or death among animals already on the ranch, a birth, or a purchase. Pick the date, then download the pre-filled template. A blank one is there too.</li>
+        <li><strong>Check the rows.</strong> Animals already on the ranch get a row each, with the tag, breed, type and location filled in. A birth gets a row for each pregnant cow, with her tag in the mother column and the calf's breed, location and birth year filled in. A purchase gets as many empty rows as you ask for, plus a Transactions row ready for the price. Delete the rows that do not apply and fill in what is left blank, such as a calf's tag or a weight. The required columns are the tag number, date, event type, location, breed and type, and the dropdowns in the template list the allowed values. A Herd tab lists the animals already in the demo for reference; it is not uploaded.</li>
         <li><strong>Upload it.</strong> You can upload the .xlsx file, upload a CSV, or paste a link to a Google Sheet that is shared as "anyone with the link". Complete the quick "are you a person" check and press Upload.</li>
-        <li><strong>Read the answer.</strong> If a row has a problem, nothing is saved and the page lists every problem with its sheet, row and column, so you can fix it and try again. If everything passes, the whole file is saved at once.</li>
+        <li><strong>Read the answer.</strong> If a row has a problem, nothing is saved and the page lists every problem with its sheet, row and column, so you can fix it and try again. If everything passes, the whole file is saved at once, with a note for anything the server filled in for you, such as the tags on a purchase's Transactions row.</li>
         <li><strong>See the result.</strong> The dashboards rebuild automatically; your rows usually show up within two or three minutes. Look up one of your tags on the Animal Lookup page.</li>
       </ol>
       <div class="callout">
@@ -89,6 +94,7 @@
 
       <h2>Updates</h2>
       <ul class="updates">
+        <li><time datetime="2026-10-16">Oct 16, 2026</time>The upload page now builds pre-filled templates: a row for every animal for a vaccination, weighing, pregnancy check or sale, a row for each pregnant cow for births, and a chosen number of rows for purchases. A transaction row with no tags now picks up that day's purchases by itself.</li>
         <li><time datetime="2026-10-15">Oct 15, 2026</time>Uploads now trigger a rebuild automatically; new rows reach the dashboards in about two minutes.</li>
         <li><time datetime="2026-10-14">Oct 14, 2026</time>Upload page went live with a bot check, an hourly limit per visitor and a seven-day clean-up of uploaded data.</li>
         <li><time datetime="2026-10-13">Oct 13, 2026</time>First working uploads (Excel, CSV and Google Sheets), with every row checked before saving. All four dashboards reviewed and tidied.</li>

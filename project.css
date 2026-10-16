@@ -54,6 +54,7 @@
 
 /* ── Screenshot gallery ── */
 .gallery { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin: 0 0 1rem; }
+.gallery-4 { grid-template-columns: repeat(4, 1fr); } /* the narrower-screen rules below come later, so they still win */
 .shot { all: unset; box-sizing: border-box; cursor: zoom-in; display: block; background: var(--cream); border: 1px solid rgba(61, 102, 66, 0.2); border-radius: 6px; overflow: hidden; transition: box-shadow 0.2s, transform 0.2s; }
 .shot:hover, .shot:focus-visible { box-shadow: 0 6px 22px rgba(28, 46, 31, 0.14); transform: translateY(-2px); outline: none; }
 .shot:focus-visible { outline: 2px solid var(--rust); outline-offset: 2px; }
