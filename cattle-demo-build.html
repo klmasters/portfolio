@@ -109,7 +109,7 @@
       <p>The only bill is the domain, about $11 a year. Everything else is on a free plan, and the free plans' limits are what shaped most of the design:</p>
       <div class="table-wrap">
         <table>
-          <thead><tr><th>Tool</th><th>What it does here</th><th>The limit that mattered</th><th>What it changed</th></tr></thead>
+          <thead><tr><th>Tool</th><th>What it does here</th><th>The limit</th><th>What it changed</th></tr></thead>
           <tbody>
             <tr><td>Neon (Postgres)</td><td>The database</td><td>0.5 GB of storage, and the database sleeps when idle</td><td>Dashboards read their data at build time, so a sleeping database never breaks them.</td></tr>
             <tr><td>Cloudflare Pages</td><td>Hosts the site and runs the upload function</td><td>About 500 builds a month; no single file over 25 MB</td><td>One rebuild per saved upload, with a limit on how often one person can upload. The database engine files load from a CDN.</td></tr>
@@ -120,18 +120,15 @@
           </tbody>
         </table>
       </div>
-      <p>Two habits came out of this. First, keep the site static, so visitors cost nothing and only an upload costs a build. Second, treat every public write path as something that could eat a quota: the bot check, the hourly limit, the file caps and the seven-day clean-up protect the free plans as much as the data.</p>
-
+      
       <h2 id="decisions">Decisions</h2>
       <p><strong>An append-only event log.</strong> Every upload adds events and nothing is ever changed or deleted. The herd's current state is a database view that takes each animal's latest event. A bad upload is handled by marking its batch as voided, which removes it from every view without losing the record. That gives an audit trail for free and makes uploads safe to repeat.</p>
-      <p><strong>All-or-nothing validation.</strong> Every row is checked before anything is written: required fields, allowed values, real dates, sensible weights, and rules that depend on the database, such as no events recorded after an animal was sold. If any row fails, nothing is saved, and the response names the sheet, row and column of every problem. A half-loaded file is worse than a rejected one.</p>
-      <p><strong>Duplicate detection by content.</strong> Each upload is fingerprinted from its cleaned contents, not its file name or format, so the same data sent again as a CSV, an Excel file or a Google Sheet is recognised and refused.</p>
-      <p><strong>Transactions, not row-by-row inserts.</strong> The batch record, the events and the transactions are written in one database transaction, so a failure leaves nothing behind.</p>
+      <p><strong>All-or-nothing validation.</strong> Every row is checked before anything is written: required fields, allowed values, real dates, sensible weights, and rules that depend on the database, such as no events recorded after an animal was sold. If any row fails, nothing is saved, and the response names the sheet, row and column of every problem.</p>
+      <p><strong>Duplicate detection by content.</strong> Each upload is fingerprinted from its cleaned contents, so the same data sent again as a CSV, an Excel file or a Google Sheet is recognised and refused.</p>
       <p><strong>One database login per job.</strong> The dashboards read with a read-only role. The upload function can insert but not update or delete. The clean-up job can change only one column. A leaked credential can do only what that one job needs.</p>
-      <p><strong>Rebuilds on demand, within a budget.</strong> The free hosting plan allows about 500 builds a month. Each saved upload triggers one build, and a separate hourly check catches batches that I void by hand. A fixed schedule would spend builds when nothing had changed and still leave a new upload waiting for the next tick.</p>
-
+      
       <h2 id="guardrails">Guardrails for a public database</h2>
-      <p>Anyone can write to this demo, so it has several layers:</p>
+      <p>Anyone can write to this demo, so it has several security layers:</p>
       <ul>
         <li>A bot check (Cloudflare Turnstile), verified on the server before any file is read.</li>
         <li>A limit of five saved uploads per visitor per hour. The visitor is identified by a keyed hash of the address, so no addresses are stored.</li>
@@ -141,13 +138,9 @@
         <li>A daily job that marks uploads older than seven days as voided.</li>
       </ul>
 
-      <h2 id="who">Who did what</h2>
-      <p>I am a data person first. The data work on this project is mine: what an event is and how animals, events and transactions relate; which questions each dashboard should answer; what a believable simulated herd looks like and whether its numbers add up; and the logic behind every figure on the dashboards.</p>
-      <p>I used Claude, Anthropic's AI assistant, for the engineering around that: the upload function and its checks, the tests, the database permissions, the hosting and automation setup, and a lot of the debugging.</p>
-
       <h2 id="wrong">Things that went wrong</h2>
       <p><strong>Leaving Metabase and Railway for Evidence.</strong> This whole project started on Supabase and Metabase, with Metabase hosted on Railway. I never loved Metabase. It carries its own branding, so to make the dashboards look like part of my site I had to embed them with iframes. Keeping it running on Railway cost about $12 a month, which did not seem worth it for a portfolio demo. I switched to Evidence because it gives me much more control over the layout, and because everything lives in git: the pages, the queries and the styling are plain files I can review, version and rebuild, instead of settings stored inside a tool.</p>
-      <p><strong>Supabase to Neon.</strong> Evidence and Supabase never connected smoothly. There were workarounds, but it was always more fiddly than it should have been. Then I left the project paused for too long, the free Supabase project was turned off, and because it was a free account I could not get help bringing it back. I moved the database to Neon. I was worried about Neon putting the database to sleep when it is idle, but this data is not busy, and Evidence loads the data when it builds, so the dashboards never wait on the database and cannot break while it sleeps. It wakes quickly when an upload arrives. The same move later rescued my <a href="/ag-data/">Kansas cattle market data project</a>, which was on Supabase too. The lesson: keep the schema and the loaders in the repo, so the database is something I can rebuild and not something I have to protect.</p>
+      <p><strong>Supabase to Neon.</strong> Evidence and Supabase never connected smoothly. There were workarounds, but it was always more fiddly than it should have been. Then I left the project paused for too long, the free Supabase project was turned off, and because it was a free account I could not get help bringing it back. I moved the database to Neon. I was worried about Neon putting the database to sleep when it is idle, but this data is not busy, and Evidence loads the data when it builds, so the dashboards never wait on the database and cannot break while it sleeps. It wakes quickly when an upload arrives. The same move later rescued my <a href="/ag-data/">Kansas cattle market data project</a>, which was on Supabase too.</p>
       <p><strong>Planning around build credits.</strong> I originally planned to host the demo on Netlify, next to the rest of my site. But Netlify's free plan meters deploys in credits, and my Kansas data project was already using most of them. A demo that rebuilds every time someone uploads would have burned through the rest within days, so before launching I moved the demo to Cloudflare Pages, which has a much larger free build allowance. The portfolio still serves it under its own address through a proxy.</p>
       <p><strong>A file too big for the host.</strong> Cloudflare Pages rejects any file over 25 MB, and the in-browser database engine that Evidence ships is bigger than that. I wrote a build step that removes those two files and points the site at the identical files on a public CDN. As a side effect, first-time visitors download less from my hosting.</p>
       <p><strong>A page with no queries.</strong> The upload page stopped starting up, and the bot check never appeared. Evidence writes a data file for each page that has queries, and the upload page had none, so the server answered the missing file with an HTML page and a success code. Evidence tried to read that as data and gave up. Adding one small, useful query fixed it. The lesson is to check what a "success" response actually contains.</p>
