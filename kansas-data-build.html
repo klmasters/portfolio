@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>How the Kansas Cattle Market Data Was Built — Kennan Masters</title>
+  <meta name="description" content="The pipeline, design decisions and hang-ups behind the Kansas cattle market data dashboards, built entirely on free tiers." />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/project.css" />
+</head>
+<body>
+  <nav></nav>
+
+  <main class="project">
+    <div class="project-wide">
+      <div class="project-inner">
+        <p><a class="back-link" href="/kansas-data.html">← Back to the project page</a></p>
+        <p class="meta-line">Kansas Cattle Market Data</p>
+        <h1>How the Kansas cattle market data was built</h1>
+        <p class="lede">The pipeline, the decisions behind it, and the parts that went wrong.</p>
+        <div class="toc" role="navigation" aria-label="On this page">
+          <p>On this page</p>
+          <ul>
+            <li><a href="#shape">The shape of it</a></li>
+            <li><a href="#cost">Designed to cost almost nothing</a></li>
+            <li><a href="#decisions">Decisions</a></li>
+            <li><a href="#wrong">Things that went wrong</a></li>
+            <li><a href="#code">The code</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <h2 id="shape" class="project-inner">The shape of it</h2>
+      <p class="gallery-note" style="margin-bottom:0.5rem!important">On a phone, swipe the diagram sideways.</p>
+      <div class="diagram diagram-narrow">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 500" role="img" aria-labelledby="t d" font-family="'DM Sans', system-ui, sans-serif">
+  <title id="t">How the Kansas cattle market data works</title>
+  <desc id="d">Public data from USDA Market News and the U.S. Drought Monitor is loaded every Monday by four Python scripts into a Postgres database. A scheduled workflow on Tuesday starts a Netlify build, which reads the database and builds five static dashboards.</desc>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#3d6642"/>
+    </marker>
+    <marker id="arro" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#e8843e"/>
+    </marker>
+  </defs>
+  <rect width="700" height="500" fill="#faf9f4"/>
+  <text x="24" y="46" text-anchor="start" font-size="11" fill="#3a5c3d" font-family="'DM Mono', monospace" letter-spacing="1.6">WEEKLY DATA LOAD</text>
+  <rect x="24" y="60" width="250" height="96" rx="8" fill="#fff" stroke="#3d6642" stroke-opacity=".35"/>
+  <text x="149.0" y="84" text-anchor="middle" font-size="15" font-weight="600" fill="#2e4d31">Public data</text>
+  <text x="149.0" y="106" text-anchor="middle" font-size="13" fill="#2e4d31">USDA Market News:</text>
+  <text x="149.0" y="124" text-anchor="middle" font-size="13" fill="#2e4d31">auction, direct cattle, hay</text>
+  <text x="149.0" y="144" text-anchor="middle" font-size="13" fill="#2e4d31">U.S. Drought Monitor</text>
+  <line x1="149.0" y1="158" x2="149.0" y2="194" stroke="#3d6642" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="24" y="198" width="250" height="112" rx="8" fill="#fff" stroke="#3d6642" stroke-width="2"/>
+  <text x="149.0" y="226" text-anchor="middle" font-size="15" font-weight="600" fill="#2e4d31">Four Python scripts</text>
+  <text x="149.0" y="244" text-anchor="middle" font-size="11" fill="#6b7a6c">GitHub Actions · every Monday</text>
+  <text x="149.0" y="272" text-anchor="middle" font-size="13" fill="#2e4d31">One workflow per source,</text>
+  <text x="149.0" y="292" text-anchor="middle" font-size="13" fill="#2e4d31">staggered an hour apart</text>
+  <line x1="149.0" y1="312" x2="149.0" y2="346" stroke="#3d6642" stroke-width="2" marker-end="url(#arr)"/>
+  <rect x="24" y="350" width="250" height="120" rx="8" fill="#fff" stroke="#3d6642" stroke-width="2"/>
+  <text x="149.0" y="378" text-anchor="middle" font-size="15" font-weight="600" fill="#2e4d31">Postgres</text>
+  <text x="149.0" y="396" text-anchor="middle" font-size="11" fill="#6b7a6c">Neon</text>
+  <text x="149.0" y="426" text-anchor="middle" font-size="13" fill="#2e4d31">Tables keyed for upserts</text>
+  <text x="149.0" y="444" text-anchor="middle" font-size="13" fill="#2e4d31">Re-running a load never</text>
+  <text x="149.0" y="462" text-anchor="middle" font-size="13" fill="#2e4d31">duplicates a row</text>
+  <rect x="394" y="365" width="252" height="90" rx="8" fill="#3d6642"/>
+  <text x="520.0" y="395" text-anchor="middle" font-size="15" font-weight="600" fill="#faf9f4">Rebuild site (Netlify)</text>
+  <text x="520.0" y="419" text-anchor="middle" font-size="12" fill="#faf9f4">Evidence reads the database</text>
+  <text x="520.0" y="437" text-anchor="middle" font-size="12" fill="#faf9f4">and builds 5 static dashboards</text>
+  <line x1="276" y1="410" x2="390" y2="410" stroke="#3d6642" stroke-width="2" marker-end="url(#arr)"/>
+  <text x="334.0" y="402" text-anchor="middle" font-size="11" fill="#6b7a6c">read at build</text>
+  <text x="415.0" y="236" text-anchor="start" font-size="10" fill="#3a5c3d" font-family="'DM Mono', monospace" letter-spacing="1.6">SCHEDULED JOBS</text>
+  <rect x="415.0" y="246" width="210" height="64" rx="8" fill="#fff" stroke="#3d6642" stroke-opacity=".35" stroke-dasharray="5 4"/>
+  <text x="520.0" y="270" text-anchor="middle" font-size="13" font-weight="600" fill="#2e4d31">Tuesday: rebuild trigger</text>
+  <text x="520.0" y="287" text-anchor="middle" font-size="11" fill="#2e4d31">after the Monday loads</text>
+  <text x="520.0" y="302" text-anchor="middle" font-size="10" fill="#6b7a6c">GitHub Actions</text>
+  <line x1="520.0" y1="312" x2="520.0" y2="361" stroke="#e8843e" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arro)"/>
+  <text x="532.0" y="340.5" text-anchor="start" font-size="11" fill="#b4601f">build hook</text>
+</svg>
+      </div>
+    </div>
+
+    <div class="project-inner">
+      <p>The site is static: Evidence queries the database when it builds and ships the results as files, so visitors never touch the database. There is no server to run. The only things that run on a schedule are the weekly loads and the weekly rebuild.</p>
+
+      <h2 id="cost">Designed to cost almost nothing</h2>
+      <p>The only bill is the domain, about $11 a year. Everything else is on a free plan, and the free plans' limits shaped the design:</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tool</th><th>What it does here</th><th>The limit</th><th>What it changed</th></tr></thead>
+          <tbody>
+            <tr><td>Neon (Postgres)</td><td>The database</td><td>0.5 GB of storage, and the database sleeps when idle</td><td>Compact tables keyed for upserts. Dashboards read at build time, so a sleeping database never breaks them.</td></tr>
+            <tr><td>GitHub Actions</td><td>The four weekly loads and the weekly rebuild trigger</td><td>Free on public repos</td><td>A scheduled job does the recurring work, so no server stays running.</td></tr>
+            <tr><td>Netlify</td><td>Builds and hosts the dashboards</td><td>300 credits a month, 15 per deploy</td><td>The site rebuilds once a week, not on every change, and edits are batched into a few deploys.</td></tr>
+            <tr><td>Evidence</td><td>Builds the dashboards</td><td>Open source</td><td>A static site: nothing runs per visitor.</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 id="decisions">Decisions</h2>
+      <p><strong>One workflow per source.</strong> Each of the four reports has its own script and its own GitHub Actions workflow, staggered an hour apart on Monday mornings. If one source breaks, the others still load, and the failing run is easy to find.</p>
+      <p><strong>Upserts, not inserts.</strong> Every table has a key generated from the columns that identify a row, and the loads insert or update on that key. Running a load twice, or re-loading a week that USDA revised, never creates duplicates.</p>
+      <p><strong>A read-only login for the site.</strong> The dashboards read with a role that can only SELECT. The loads use a separate login that can write. A leaked dashboard credential cannot change the data.</p>
+      <p><strong>Rebuild after the loads, on a schedule.</strong> New data is published by a rebuild every Tuesday at noon UTC, a scheduled GitHub workflow that triggers a Netlify build hook. It rebuilds whatever is in the database, so adding a new source needs no change to it.</p>
+
+      <h2 id="wrong">Things that went wrong</h2>
+      <p><strong>GitHub's scheduler runs late.</strong> I first scheduled the rebuild for Monday, right after the loads. But scheduled runs in this repo start five to eight hours late and unpredictably, and the Monday loads finished at about 22:30 UTC. A fixed time right after the loads would sometimes run before the data was in. Moving the rebuild to Tuesday leaves plenty of margin.</p>
+      <p><strong>Drought percentages that stack.</strong> The Drought Monitor's columns are cumulative: "D1" is the share of Kansas in moderate drought or worse, and it already includes D2 and above. Stacking them as published would count the same land several times. The chart subtracts each level from the one before it to get separate bands.</p>
+      <p><strong>A volume line that jumps around.</strong> Weekly auction volume swings by about 60% from one week to the next, while the price and drought lines move 5 to 18%. Putting it next to them made the comparison unreadable. The panel uses an 8-week average instead.</p>
+      <p><strong>A free database that was turned off.</strong> This project's database was on Supabase's free plan, too. When the project was paused and could not be restored, I recreated the tables on Neon from the schema file and reloaded the data from the public reports. The longer version of that story is in the <a href="/cattle-demo-build.html#wrong">ranch demo's write-up</a>.</p>
+
+      <h2 id="code">The code</h2>
+      <p>The loading scripts are in the <a href="https://github.com/klmasters/ag-data-pipeline">ag-data-pipeline</a> repository and the dashboards are in <a href="https://github.com/klmasters/ag-data-evidence">ag-data-evidence</a>, both on GitHub.</p>
+      <p><a class="back-link" href="/kansas-data.html">← Back to the project page</a></p>
+    </div>
+  </main>
+
+  <footer></footer>
+  <script src="/components.js"></script>
+</body>
+</html>

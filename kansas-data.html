@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kansas Cattle Market Data — Kennan Masters</title>
+  <meta name="description" content="Weekly Kansas cattle, hay and drought data, loaded automatically and published as a set of dashboards." />
+  <link rel="icon" href="/favicon.ico" sizes="48x48" />
+  <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/styles.css" />
+  <link rel="stylesheet" href="/project.css" />
+</head>
+<body>
+  <nav></nav>
+
+  <main class="project">
+    <div class="project-wide">
+      <div class="project-inner">
+        <p class="meta-line">Project<span class="dot">·</span>Data pipeline &amp; dashboards</p>
+        <h1>Kansas Cattle Market Data</h1>
+        <p class="lede">Weekly Kansas cattle, hay, and drought data that's loaded automatically and published as a set of dashboards.</p>
+        <p class="meta-line">Live<span class="dot">·</span>Public data<span class="dot">·</span>Updated every week<span class="dot">·</span>Last updated Oct 16, 2026</p>
+        <div class="pills">
+          <span class="pill">Python</span>
+          <span class="pill">Neon Postgres</span>
+          <span class="pill">GitHub Actions</span>
+          <span class="pill">Evidence</span>
+          <span class="pill">Netlify</span>
+        </div>
+        <div class="cta-row">
+          <a class="btn-primary" href="/ag-data/">Open the dashboards</a>
+        </div>
+      </div>
+
+      <div class="gallery" aria-label="Screenshots">
+        <button type="button" class="shot" data-full="/images/kansas-data/market-trends.png" data-title="Market Trends">
+          <img src="/images/kansas-data/market-trends.png" alt="Market Trends dashboard: latest-week steer price, a seasonal comparison by year, heifer discount, price by weight class and auction volume" loading="lazy" />
+          <span><b>Market Trends</b><small>Captured Oct 16, 2026</small></span>
+        </button>
+        <button type="button" class="shot" data-full="/images/kansas-data/drought-market-conditions.png" data-title="Drought &amp; Market Conditions">
+          <img src="/images/kansas-data/drought-market-conditions.png" alt="Drought and Market Conditions dashboard: a stacked chart of Kansas drought since 2000, and drought lined up with hay prices, steer prices and auction volume" loading="lazy" />
+          <span><b>Drought &amp; Market Conditions</b><small>Captured Oct 16, 2026</small></span>
+        </button>
+        <button type="button" class="shot" data-full="/images/kansas-data/backgrounding-economics.png" data-title="Backgrounding Economics">
+          <img src="/images/kansas-data/backgrounding-economics.png" alt="Backgrounding Economics dashboard: value of gain over time, the cost of hay with a slider, and what is left after hay" loading="lazy" />
+          <span><b>Backgrounding Economics</b><small>Captured Oct 16, 2026</small></span>
+        </button>
+      </div>
+      <p class="gallery-note project-inner">Click a screenshot to see the whole page.</p>
+    </div>
+
+    <div class="project-inner">
+      <h2>What it is</h2>
+      <p>A pipeline and a set of dashboards for one question: what is going on in the Kansas cattle market, and how do hay prices and drought fit in? Every week, scripts pull the latest public reports from USDA Market News (auction sales, direct sales of cattle, and hay) and from the U.S. Drought Monitor, clean them up and store them in a Postgres database. A few hours later the dashboards rebuild with the new week's numbers.</p>
+
+      <h2>How it was built</h2>
+      <p>The short version: scheduled scripts load four public reports into Postgres every Monday, a rebuild turns the database into a static dashboard site every Tuesday, and the site costs almost nothing to run. The longer version, including the decisions and the parts that went wrong, is on the next page: <a href="/kansas-data-build.html">How it was built →</a></p>
+
+      <h2>What's in it</h2>
+      <ul>
+        <li><strong>Overview.</strong> The latest week at a glance: the 500-600 lb steer price against the week before, the alfalfa hay price against the last report, the share of Kansas in drought against a year ago, and direct cattle sales against auction.</li>
+        <li><strong>Market Trends.</strong> Auction prices and volume over time. A weight class dropdown (400 to 800 lb) drives the latest-week numbers, the seasonal pattern and the heifer-discount chart.</li>
+        <li><strong>Drought &amp; Market Conditions.</strong> Kansas drought since 2000, and how it lines up with hay prices, steer prices and auction volume since 2020.</li>
+        <li><strong>Backgrounding Economics.</strong> What a lighter steer is worth against a heavier one, the "value of gain" between them, and what is left after paying for hay. A slider sets how many pounds of hay it takes to put on a pound of gain.</li>
+        <li><strong>Direct vs. Auction.</strong> How cattle sold directly compare with the same cattle at the sale barn, by class and weight, and how much of the volume goes each way.</li>
+      </ul>
+
+      <h2 id="how-to-use">How to use it</h2>
+      <ol>
+        <li><strong>Open the dashboards</strong> and start with the Overview for the current week.</li>
+        <li><strong>Pick a weight class or class</strong> where a page has a dropdown. The numbers and charts on that page follow it.</li>
+        <li><strong>Narrow the dates.</strong> Charts with a date filter let you jump to the last year, the last three months, or any range.</li>
+        <li><strong>Try the slider</strong> on Backgrounding Economics to see how the answer changes as the hay assumption does. It is an assumption of mine, not USDA data.</li>
+        <li><strong>Hover over a chart</strong> to see exact values. On the comparison panels the hover lines up across charts.</li>
+      </ol>
+      <div class="callout"><p><a class="btn-primary" href="/ag-data/">Open the dashboards</a></p></div>
+
+      <h2>Updates</h2>
+      <ul class="updates">
+        <li><time datetime="2026-10-13">Oct 13, 2026</time>Review pass on the dashboards: a weight class dropdown on Market Trends, clearer descriptions, and tidier pages.</li>
+        <li><time datetime="2026-10-07">Oct 7, 2026</time>Five dashboards published under kennanmasters.com/ag-data/.</li>
+        <li><time datetime="2026-10-06">Oct 6, 2026</time>Weekly rebuild set up: new data is published every Tuesday without any manual step.</li>
+        <li><time datetime="2026-10-05">Oct 5, 2026</time>Database moved from Supabase to Neon after the free Supabase project was paused.</li>
+      </ul>
+    </div>
+  </main>
+
+  <dialog class="lightbox" id="lightbox" aria-label="Screenshot">
+    <div class="lightbox-frame">
+      <div class="lightbox-bar"><span id="lightbox-title"></span><button type="button" id="lightbox-close">Close</button></div>
+      <img id="lightbox-img" alt="" />
+    </div>
+  </dialog>
+
+  <footer></footer>
+  <script src="/components.js"></script>
+  <script>
+    // Screenshot gallery: a click opens the full-size image in a dialog. Esc, the Close button
+    // or a click outside the picture closes it.
+    (function () {
+      var box = document.getElementById('lightbox');
+      var img = document.getElementById('lightbox-img');
+      var title = document.getElementById('lightbox-title');
+      document.querySelectorAll('.shot').forEach(function (b) {
+        b.addEventListener('click', function () {
+          img.src = b.dataset.full;
+          img.alt = b.querySelector('img').alt;
+          title.textContent = b.dataset.title;
+          box.showModal();
+          box.querySelector('.lightbox-frame').scrollTop = 0;
+        });
+      });
+      document.getElementById('lightbox-close').addEventListener('click', function () { box.close(); });
+      box.addEventListener('click', function (e) { if (e.target === box) box.close(); });
+    })();
+  </script>
+</body>
+</html>
