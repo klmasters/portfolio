@@ -92,7 +92,7 @@ dialog.lightbox::backdrop { background: rgba(28, 46, 31, 0.78); }
 
 /* ── Diagram and table ── */
 .diagram { margin: 1.5rem 0 1.5rem; border: 1px solid rgba(61, 102, 66, 0.2); border-radius: 6px; overflow: hidden; background: var(--cream); }
-.diagram svg { display: block; width: 100%; height: auto; }
+.diagram svg { display: block; width: 100%; max-width: 1000px; margin: 0 auto; height: auto; }
 .table-wrap { overflow-x: auto; margin: 1.25rem 0 1.75rem; border: 1px solid rgba(61, 102, 66, 0.2); border-radius: 6px; }
 .project table { border-collapse: collapse; width: 100%; min-width: 40rem; font-size: 0.92rem; }
 .project th { text-align: left; font-family: 'DM Mono', monospace; font-size: 0.68rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--sage-dark); background: var(--parchment); padding: 0.7rem 0.9rem; font-weight: 400; }
