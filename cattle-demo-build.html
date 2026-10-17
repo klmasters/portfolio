@@ -77,7 +77,7 @@
   <rect x="634" y="430" width="252" height="90" rx="8" fill="#3d6642"/>
   <text x="760.0" y="460" text-anchor="middle" font-size="15" font-weight="600" fill="#faf9f4">Rebuild site</text>
   <text x="760.0" y="484" text-anchor="middle" font-size="12" fill="#faf9f4">Evidence reads the database</text>
-  <text x="760.0" y="502" text-anchor="middle" font-size="12" fill="#faf9f4">and builds 4 static dashboards</text>
+  <text x="760.0" y="502" text-anchor="middle" font-size="12" fill="#faf9f4">and builds 3 static dashboards</text>
   <line x1="516" y1="475" x2="630" y2="475" stroke="#e8843e" stroke-width="2" stroke-dasharray="5 4" marker-end="url(#arro)"/>
   <text x="574.0" y="467" text-anchor="middle" font-size="11" fill="#b4601f">deploy hook</text>
   <text x="574.0" y="492" text-anchor="middle" font-size="11" fill="#b4601f">starts a rebuild</text>
@@ -116,7 +116,7 @@
     </div>
 
     <div class="project-inner">
-      <p>The site is static: Evidence queries the database when it builds and ships the results as files, so visitors never touch the database. The only live code is two small functions on Cloudflare: one takes uploads and the other builds pre-filled templates.</p>
+      <p>The site is static: Evidence queries the database when it builds and ships the results as files, so visitors never touch the database. The only live code is three small functions on Cloudflare: one takes uploads, one builds pre-filled templates, and one builds an animal's history file.</p>
 
       <h2 id="cost">Designed to cost almost nothing</h2>
       <p>The only bill is the domain, about $11 a year. Everything else is on a free plan, and the free plans' limits are what shaped most of the design:</p>
@@ -125,7 +125,7 @@
           <thead><tr><th>Tool</th><th>What it does here</th><th>The limit</th><th>What it changed</th></tr></thead>
           <tbody>
             <tr><td>Neon (Postgres)</td><td>The database</td><td>0.5 GB of storage, and the database sleeps when idle</td><td>Dashboards read their data at build time, so a sleeping database never breaks them.</td></tr>
-            <tr><td>Cloudflare Pages</td><td>Hosts the site and runs the upload and template functions</td><td>About 500 builds a month; no single file over 25 MB</td><td>One rebuild per saved upload, with a limit on how often one person can upload. The database engine files load from a CDN.</td></tr>
+            <tr><td>Cloudflare Pages</td><td>Hosts the site and runs the upload, template and history functions</td><td>About 500 builds a month; no single file over 25 MB</td><td>One rebuild per saved upload, with a limit on how often one person can upload. The database engine files load from a CDN.</td></tr>
             <tr><td>Netlify</td><td>Serves my portfolio and the Kansas data site</td><td>300 credits a month, 15 per deploy</td><td>The demo lives on Cloudflare instead, and Netlify deploys are batched.</td></tr>
             <tr><td>GitHub Actions</td><td>The weekly data loads, the clean-up job and the void check</td><td>Free on public repos</td><td>Small scheduled jobs do the recurring work, so no server stays running.</td></tr>
             <tr><td>Cloudflare Turnstile</td><td>The bot check</td><td>Free</td><td>Protects the free quotas from abuse.</td></tr>
@@ -138,14 +138,17 @@
       <p><strong>An append-only event log.</strong> Every upload adds events and nothing is ever changed or deleted. The herd's current state is a database view that takes each animal's latest event. A bad upload is handled by marking its batch as voided, which removes it from every view without losing the record. That gives an audit trail for free and makes uploads safe to repeat.</p>
       <p><strong>All-or-nothing validation.</strong> Every row is checked before anything is written: required fields, allowed values, real dates, sensible weights, and rules that depend on the database, such as no events recorded after an animal was sold. If any row fails, nothing is saved, and the response names the sheet, row and column of every problem.</p>
       <p><strong>Duplicate detection by content.</strong> Each upload is fingerprinted from its cleaned contents, so the same data sent again as a CSV, an Excel file or a Google Sheet is recognised and refused.</p>
-      <p><strong>Pre-filled templates by editing the template file.</strong> The template download does not build a spreadsheet from scratch. It opens the real template, which is a zip of XML files, writes the rows into the right cells and zips it again. Most spreadsheet libraries that run inside a Cloudflare function cannot write dropdown lists, and the ones that can are large, so editing the file keeps every dropdown, note and format the template already has. A birth template lists the cows still on the ranch whose latest pregnancy check has no birth after it, the same definition the Pregnancy &amp; Calving dashboard uses.</p>
+      <p><strong>A data model that looks like a ranch's own notes.</strong> The event types are the ones a rancher would use: worked, moved, birth, purchase, sold and deceased. What happened on a working day (vaccinated, weighed, pregnancy checked) goes in the notes. A positive pregnancy check also carries the months pregnant; an open cow is written as "preg check - open" with no months. The current herd is a database view that takes each animal's latest event and works out the weight and whether the cow is pregnant, so the dashboards and the templates read one definition.</p>
+      <p><strong>Short rows, filled in from the animal's record.</strong> Only the tag, date and event type are required. For an animal already on the ranch, the server fills in its type, gender, birth year, mother and pasture from what is stored, so a new row can be as short as a date and a note. A new animal must arrive with a birth or purchase row, and its later rows copy from that one. The check runs in two passes: first on the file alone, then against the database.</p>
+      <p><strong>Spreadsheets written from scratch.</strong> My first pre-filled templates edited the real template file, which is a zip of XML files, so the dropdowns and formats survived. When the data model changed, that became the thing to maintain, so I replaced it with a small writer that builds the workbook directly. The allowed values and the column order now live in one file of code that the writer and the validator both read, so a change is made once instead of in a binary template and again in the code.</p>
+      <p><strong>One file to look up, edit and add to.</strong> The Animal Lookup page downloads one animal's history as a spreadsheet, one row per event, each with the id it has in the database. A visitor adds a row at the bottom and uploads the file on the same page. The server recognises the saved rows by their ids and skips them, ignores an edit to an old row with a warning (the log is append-only, so corrections stay with me), refuses any new row for a different animal, and refuses a sold or deceased animal. The duplicate check fingerprints only the new rows, so the same new event sent twice is still caught.</p>
       <p><strong>A shortcut for the Transactions tab.</strong> After typing a purchase's tags on the Events tab, the Transactions tab asked for the same tags again as a comma-separated list. Now a transaction row with no tags covers every purchase (or sale) dated that day, and the head count and total are worked out. A row that lists its tags follows the original rules. The response notes which tags were filled in, so it is never a silent guess, and two blank rows on one date are refused as ambiguous.</p>
       <p><strong>One database login per job.</strong> The dashboards read with a read-only role. The upload function can insert but not update or delete. The clean-up job can change only one column. A leaked credential can do only what that one job needs.</p>
       
       <h2 id="guardrails">Guardrails for a public database</h2>
       <p>Anyone can write to this demo, so it has several security layers:</p>
       <ul>
-        <li>A bot check (Cloudflare Turnstile), verified on the server before any file is read. The template download sits behind the same check, so a script cannot keep waking the database.</li>
+        <li>A bot check (Cloudflare Turnstile), verified on the server before any file is read. The template and history downloads sit behind the same check, so a script cannot keep waking the database.</li>
         <li>A limit of five saved uploads per visitor per hour. The visitor is identified by a keyed hash of the address, so no addresses are stored.</li>
         <li>File limits: 1 MB, 500 rows per tab, short notes.</li>
         <li>Parameterised SQL everywhere, so uploaded text can never become a command.</li>
@@ -159,6 +162,8 @@
       <p><strong>Planning around build credits.</strong> I originally planned to host the demo on Netlify, next to the rest of my site. But Netlify's free plan meters deploys in credits, and my Kansas data project was already using most of them. A demo that rebuilds every time someone uploads would have burned through the rest within days, so before launching I moved the demo to Cloudflare Pages, which has a much larger free build allowance. The portfolio still serves it under its own address through a proxy.</p>
       <p><strong>A file too big for the host.</strong> Cloudflare Pages rejects any file over 25 MB, and the in-browser database engine that Evidence ships is bigger than that. I wrote a build step that removes those two files and points the site at the identical files on a public CDN. As a side effect, first-time visitors download less from my hosting.</p>
       <p><strong>A page with no queries.</strong> The upload page stopped starting up, and the bot check never appeared. Evidence writes a data file for each page that has queries, and the upload page had none, so the server answered the missing file with an HTML page and a success code. Evidence tried to read that as data and gave up. Adding one small, useful query fixed it. The lesson is to check what a "success" response actually contains.</p>
+
+      <p><strong>Rebuilding the data under a live site.</strong> I regenerated the simulated herd with the generator script, which rebuilt the tables from scratch. The site stopped fitting its own database without any error message. The columns that tie each row to an upload and the permissions each database login had were added by hand in the database after the script was written, so the script's tables did not have them, and dropping the old tables took the permissions with them. I found it by comparing the table's columns with what the code expects, put the columns and permissions back, and now give the generator a written list of what the site depends on. The lesson is that anything added by hand to a table has to be in the script that builds it.</p>
 
       <h2 id="code">The code</h2>
       <p>The dashboards and the upload function are in the <a href="https://github.com/klmasters/cattle-demo-evidence">cattle-demo-evidence</a> repository on GitHub.</p>

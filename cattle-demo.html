@@ -24,7 +24,7 @@
         <p class="meta-line">Project<span class="dot">·</span>Dashboard demo</p>
         <h1>Cattle Management Demo</h1>
         <p class="lede"> Manage a cattle herd with a spreadsheet.</p>
-        <p class="meta-line">Live demo<span class="dot">·</span>Simulated data<span class="dot">·</span>Last updated Oct 16, 2026</p>
+        <p class="meta-line">Live demo<span class="dot">·</span>Simulated data<span class="dot">·</span>Last updated Oct 17, 2026</p>
         <div class="pills">
           <span class="pill">Python</span>
           <span class="pill">Neon Postgres</span>
@@ -38,18 +38,22 @@
         </div>
       </div>
 
-      <div class="gallery" aria-label="Screenshots">
+      <div class="gallery gallery-4" aria-label="Screenshots">
+        <button type="button" class="shot" data-full="/images/cattle-demo/herd-overview.png" data-title="Herd Overview">
+          <img src="/images/cattle-demo/herd-overview.png" alt="Herd Overview dashboard: total herd, cows, bulls and pregnant cows, cattle by pasture, cows by age, head on the ranch over time, calf sales by year and pregnancy checks by year" loading="lazy" />
+          <span><b>Herd Overview</b><small>Captured Oct 17, 2026</small></span>
+        </button>
         <button type="button" class="shot" data-full="/images/cattle-demo/financial.png" data-title="Financial">
-          <img src="/images/cattle-demo/financial.png" alt="Financial dashboard: spent, earned and net position, purchases and sales by year, money in and out by month, and recent transactions" loading="lazy" />
-          <span><b>Financial</b><small>Captured Oct 15, 2026</small></span>
+          <img src="/images/cattle-demo/financial.png" alt="Financial dashboard: spent, earned and net position, purchases and sales by year, price per cwt and per head by year, and a table of every transaction" loading="lazy" />
+          <span><b>Financial</b><small>Captured Oct 17, 2026</small></span>
         </button>
         <button type="button" class="shot" data-full="/images/cattle-demo/animal-lookup.png" data-title="Animal Lookup">
-          <img src="/images/cattle-demo/animal-lookup.png" alt="Animal Lookup dashboard showing one calf's summary, event history, weight history and events by type" loading="lazy" />
-          <span><b>Animal Lookup</b><small>Captured Oct 15, 2026</small></span>
+          <img src="/images/cattle-demo/animal-lookup.png" alt="Animal Lookup dashboard showing one calf's summary, event history, weight history and events by type, with a button to download its history and a form to upload new rows for it" loading="lazy" />
+          <span><b>Animal Lookup</b><small>Captured Oct 17, 2026</small></span>
         </button>
         <button type="button" class="shot" data-full="/images/cattle-demo/upload-page.png" data-title="Add Events to the Data">
-          <img src="/images/cattle-demo/upload-page.png" alt="The Add Events to the Data page with the birth template chosen: options for pre-filled templates, a form with a date and filters, and the upload form below it" loading="lazy" />
-          <span><b>Add Events page, building a birth template</b><small>Captured Oct 16, 2026</small></span>
+          <img src="/images/cattle-demo/upload-page.png" alt="The Add Events to the Data page with the birth template chosen: a form with an event, a date and filters, and the upload form below it" loading="lazy" />
+          <span><b>Add Events page</b><small>Captured Oct 17, 2026</small></span>
         </button>
       </div>
     </div>
@@ -57,28 +61,28 @@
     <div class="project-inner">
       <h2>What it is</h2>
       <p>A small cattle-records system built to help visualize and manage herd changes. Logs are tracked using a spreadsheet and uploaded on a webpage.</p>
-      <p>The upload page can also build the spreadsheet for you. Say what happened and when (a vaccination, a calving, a purchase) and you get a template with the rows already started, so you only type what is new.</p>
-      <p>This data is simulated using a Python script: about 200 head and five years of simulated events.</p>
+      <p>The upload page can also build the spreadsheet for you. Say what happened and when (a working day, a calving, a purchase) and you get a template with the rows already started, so you only type what is new. You can also download one animal's whole history from the Animal Lookup page, add a row to it, and upload it to add an event for that animal only.</p>
+      <p>This data is simulated using a Python script: about 75 head on the ranch now and 356 animals over almost three years (January 2024 to November 2026), with working days, moves between three pastures, calvings and sales, and prices that rise from year to year.</p>
 
       <h2>Built to run for free</h2>
       <p>A lot of the decisions in this project came back to cost. The only thing I pay for is the domain name, about $11 a year. The database, the hosting, the upload function, the bot check, and the automation all run on free plans. The design had to fit inside their limits: a static site instead of a server, a rebuild budget, a cap on uploads. The details are on the next page:<a href="/cattle-demo-build.html"> How it was built →</a></p>
 
       <h2>Current Reports</h2>
       <ul>
-        <li><strong>Herd Overview.</strong> How many head, by breed, location and birth year, and what calves weighed before they were sold.</li>
-        <li><strong>Pregnancy &amp; Calving.</strong> Which cows are expected to calve and when, and which calf belongs to which cow.</li>
-        <li><strong>Financial.</strong> Purchases and sales by year, and the money in and out.</li>
-        <li><strong>Animal Lookup.</strong> Pick any tag and see that animal's whole history: where it came from, its calves, its weights, and its status.</li>
+        <li><strong>Herd Overview.</strong> How many head, by pasture and by cow age, how the herd grows and shrinks through the year, what the calves sold for each year, and how many cows tested pregnant or open.</li>
+        <li><strong>Financial.</strong> Purchases and sales by year, the price per hundredweight and per head, and every transaction with its weight.</li>
+        <li><strong>Animal Lookup.</strong> Pick any tag and see that animal's whole history: where it came from, its calves, its weights, its pastures and its status. Download the history as a spreadsheet, or add a new event to that animal.</li>
       </ul>
 
       <h2 id="how-to-use">How to use it</h2>
       <ol>
-        <li><strong>Open the upload page</strong> and choose what happened: a vaccination, weighing, pregnancy check, sale or death among animals already on the ranch, a birth, or a purchase. Pick the date, then download the pre-filled template. A blank one is there too.</li>
-        <li><strong>Check the rows.</strong> Animals already on the ranch get a row each, with the tag, breed, type and location filled in. A birth gets a row for each pregnant cow, with her tag in the mother column and the calf's breed, location and birth year filled in. A purchase gets as many empty rows as you ask for, plus a Transactions row ready for the price. Delete the rows that do not apply and fill in what is left blank, such as a calf's tag or a weight. The required columns are the tag number, date, event type, location, breed and type, and the dropdowns in the template list the allowed values. A Herd tab lists the animals already in the demo for reference; it is not uploaded.</li>
+        <li><strong>Open the upload page</strong> and choose the event: worked (a working day, such as vaccinating or weighing, or a pregnancy check), moved, sold or deceased among animals already on the ranch, or a birth or a purchase. Pick the date, then download the pre-filled template. A blank one is there too.</li>
+        <li><strong>Check the rows.</strong> Animals already on the ranch get a row each, with the tag, type, gender and pasture filled in. A birth gets a row for each pregnant cow, with her tag in the mother column and the calf's pasture and birth year filled in. A purchase gets as many empty rows as you ask for, plus a Transactions row ready for the price. Delete the rows that do not apply and fill in what is left blank, such as a calf's tag or a weight. Only the tag, date and event type are required: for an animal already on the ranch, the server fills in the rest from its record, and a new animal needs a birth or purchase row first. The dropdowns in the template list the allowed values.</li>
         <li><strong>Upload it.</strong> You can upload the .xlsx file, upload a CSV, or paste a link to a Google Sheet that is shared as "anyone with the link". Complete the quick "are you a person" check and press Upload.</li>
         <li><strong>Read the answer.</strong> If a row has a problem, nothing is saved and the page lists every problem with its sheet, row and column, so you can fix it and try again. If everything passes, the whole file is saved at once, with a note for anything the server filled in for you, such as the tags on a purchase's Transactions row.</li>
-        <li><strong>See the result.</strong> The dashboards rebuild automatically; your rows usually show up within two or three minutes. Look up one of your tags on the Animal Lookup page.</li>
+        <li><strong>See the result.</strong> The dashboards rebuild automatically. The page counts down three minutes and then asks you to refresh. Look up one of your tags on the Animal Lookup page.</li>
       </ol>
+      <p>To add an event to a single animal instead, open <strong>Animal Lookup</strong>, pick the tag and download its history. It has one row per event. Add a row at the bottom, leave the <code>row_id</code> column blank, and upload the file on the same page. Only the new rows are saved, the rows that were already there are skipped, a changed old row is ignored with a warning, and every new row must be for that animal. A sold or deceased animal takes no new events.</p>
       <div class="callout">
         <p>Please use made-up data. It is a shared demo: files are limited to 1 MB and 500 rows per tab, each visitor can save five uploads an hour, and uploaded data is removed after seven days.</p>
         <p><a class="btn-secondary" href="/ranch-demo/upload/">Go to the upload page</a></p>
@@ -90,6 +94,7 @@
 
       <h2>Updates</h2>
       <ul class="updates">
+        <li><time datetime="2026-10-17">Oct 17, 2026</time>New data and new dashboards. I regenerated the simulated herd to look more like a real ranch's records: three pastures, working days with notes (vaccinated, weighed, pregnancy checked), moves between pastures, and calf prices per hundredweight. The Herd Overview, Financial and Animal Lookup reports were rebuilt for it. Animal Lookup can now download one animal's history as a spreadsheet and take new rows for that animal only. The upload page counts down three minutes after a save, then asks for a refresh. Pregnancy and calving details are still in the data but hidden for now.</li>
         <li><time datetime="2026-10-16">Oct 16, 2026</time>The upload page now builds pre-filled templates: a row for every animal for a vaccination, weighing, pregnancy check or sale, a row for each pregnant cow for births, and a chosen number of rows for purchases. A transaction row with no tags now picks up that day's purchases by itself.</li>
         <li><time datetime="2026-10-15">Oct 15, 2026</time>Uploads now trigger a rebuild automatically; new rows reach the dashboards in about two minutes.</li>
         <li><time datetime="2026-10-14">Oct 14, 2026</time>Upload page went live with a bot check, an hourly limit per visitor and a seven-day clean-up of uploaded data.</li>
