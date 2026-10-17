@@ -24,7 +24,7 @@
         <p class="meta-line">Project<span class="dot">·</span>Data pipeline &amp; dashboards</p>
         <h1>Kansas Cattle Market Data</h1>
         <p class="lede">Weekly Kansas cattle, hay, and drought data that's loaded automatically and published as a set of dashboards.</p>
-        <p class="meta-line">Live<span class="dot">·</span>Public data<span class="dot">·</span>Updated every week<span class="dot">·</span>Last updated Oct 16, 2026</p>
+        <p class="meta-line">Live<span class="dot">·</span>Public data<span class="dot">·</span>Updated every week<span class="dot">·</span>Last updated Oct 17, 2026</p>
         <div class="pills">
           <span class="pill">Python</span>
           <span class="pill">Neon Postgres</span>
@@ -37,18 +37,22 @@
         </div>
       </div>
 
-      <div class="gallery" aria-label="Screenshots">
-        <button type="button" class="shot" data-full="/images/kansas-data/market-trends.png" data-title="Market Trends">
-          <img src="/images/kansas-data/market-trends.png" alt="Market Trends dashboard: latest-week steer price, a seasonal comparison by year, heifer discount, price by weight class and auction volume" loading="lazy" />
-          <span><b>Market Trends</b><small>Captured Oct 16, 2026</small></span>
+      <div class="gallery gallery-4" aria-label="Screenshots">
+        <button type="button" class="shot" data-full="/images/kansas-data/cattle-market-trends.png" data-title="Cattle Market Trends">
+          <img src="/images/kansas-data/cattle-market-trends.png" alt="Cattle Market Trends dashboard: latest-week steer price, a seasonal comparison by year, heifer discount, price by weight class and auction volume" loading="lazy" />
+          <span><b>Cattle Market Trends</b><small>Captured Oct 17, 2026</small></span>
+        </button>
+        <button type="button" class="shot" data-full="/images/kansas-data/backgrounding-economics.png" data-title="Backgrounding Economics">
+          <img src="/images/kansas-data/backgrounding-economics.png" alt="Backgrounding Economics dashboard: sliders for a steer's weight, gain and hay, a table comparing selling now with selling heavier, and what feeding added or took away in each past year" loading="lazy" />
+          <span><b>Backgrounding Economics</b><small>Captured Oct 17, 2026</small></span>
+        </button>
+        <button type="button" class="shot" data-full="/images/kansas-data/hay-market.png" data-title="Hay Market">
+          <img src="/images/kansas-data/hay-market.png" alt="Hay Market dashboard: hay prices by type, by package and by quality, each over time" loading="lazy" />
+          <span><b>Hay Market</b><small>Captured Oct 17, 2026</small></span>
         </button>
         <button type="button" class="shot" data-full="/images/kansas-data/drought-market-conditions.png" data-title="Drought &amp; Market Conditions">
           <img src="/images/kansas-data/drought-market-conditions.png" alt="Drought and Market Conditions dashboard: a stacked chart of Kansas drought since 2000, and drought lined up with hay prices, steer prices and auction volume" loading="lazy" />
-          <span><b>Drought &amp; Market Conditions</b><small>Captured Oct 16, 2026</small></span>
-        </button>
-        <button type="button" class="shot" data-full="/images/kansas-data/backgrounding-economics.png" data-title="Backgrounding Economics">
-          <img src="/images/kansas-data/backgrounding-economics.png" alt="Backgrounding Economics dashboard: value of gain over time, the cost of hay with a slider, and what is left after hay" loading="lazy" />
-          <span><b>Backgrounding Economics</b><small>Captured Oct 16, 2026</small></span>
+          <span><b>Drought &amp; Market Conditions</b><small>Captured Oct 17, 2026</small></span>
         </button>
       </div>
       <p class="gallery-note project-inner">Click a screenshot to see the whole page.</p>
@@ -56,30 +60,31 @@
 
     <div class="project-inner">
       <h2>What it is</h2>
-      <p>A pipeline and a set of dashboards for one question: what is going on in the Kansas cattle market, and how do hay prices and drought fit in? Every week, scripts pull the latest public reports from USDA Market News (auction sales, direct sales of cattle, and hay) and from the U.S. Drought Monitor, clean them up and store them in a Postgres database. A few hours later the dashboards rebuild with the new week's numbers.</p>
+      <p>A pipeline and a set of dashboards for one question: what is going on in the Kansas cattle market, and how do hay prices and drought fit in? Every week, scripts pull the latest public reports from <a href="https://mymarketnews.ams.usda.gov/">USDA Market News</a> (the <a href="https://mymarketnews.ams.usda.gov/viewReport/1895">Kansas Weekly Cattle Auction Summary</a>, the <a href="https://mymarketnews.ams.usda.gov/viewReport/3097">Kansas Direct Cattle report</a> and the <a href="https://mymarketnews.ams.usda.gov/viewReport/2885">Kansas Direct Hay report</a>) and from the <a href="https://droughtmonitor.unl.edu/">U.S. Drought Monitor</a>, clean them up and store them in a Postgres database. A few hours later the dashboards rebuild with the new week's numbers.</p>
 
       <h2>How it was built</h2>
       <p>The short version: scheduled scripts load four public reports into Postgres every Monday, a rebuild turns the database into a static dashboard site every Tuesday, and the site costs almost nothing to run. The longer version, including the decisions and the parts that went wrong, is on the next page: <a href="/kansas-data-build.html">How it was built →</a></p>
 
       <h2>What's in it</h2>
       <ul>
-        <li><strong>Overview.</strong> The latest week at a glance: the 500-600 lb steer price against the week before, the alfalfa hay price against the last report, the share of Kansas in drought against a year ago, and direct cattle sales against auction.</li>
-        <li><strong>Market Trends.</strong> Auction prices and volume over time. A weight class dropdown (400 to 800 lb) drives the latest-week numbers, the seasonal pattern and the heifer-discount chart.</li>
+        <li><strong>Cattle Market Trends.</strong> The home page. Auction prices and volume over time: the latest week, a seasonal comparison by year, the heifer discount, price by weight class and feeder cattle volume. A class and a weight class dropdown (400 to 800 lb) drive the page.</li>
+        <li><strong>Backgrounding Economics.</strong> A "sell now, or feed it up?" calculator. Set a steer's weight today, the weight to sell at, the gain per day and the hay it eats, and the page replays that choice in every past year with that year's auction and hay prices, to show what feeding added or took away.</li>
+        <li><strong>Hay Market.</strong> What hay costs: price over time by hay type (alfalfa, brome, bluestem and wheat straw), by package (round or square bales) and by USDA quality grade.</li>
         <li><strong>Drought &amp; Market Conditions.</strong> Kansas drought since 2000, and how it lines up with hay prices, steer prices and auction volume since 2020.</li>
-        <li><strong>Backgrounding Economics.</strong> What a lighter steer is worth against a heavier one, the "value of gain" between them, and what is left after paying for hay. A slider sets how many pounds of hay it takes to put on a pound of gain.</li>
         <li><strong>Direct vs. Auction.</strong> How cattle sold directly compare with the same cattle at the sale barn, by class and weight, and how much of the volume goes each way.</li>
       </ul>
 
       <h2 id="how-to-use">How to use it</h2>
       <ol>
-        <li><strong>Open the dashboards</strong> and start with the Overview for the current week.</li>
+        <li><strong>Open the dashboards</strong> and start with Cattle Market Trends for the current week.</li>
         <li><strong>Pick a weight class or class</strong> where a page has a dropdown. The numbers and charts on that page follow it.</li>
         <li><strong>Narrow the dates.</strong> Charts with a date filter let you jump to the last year, the last three months, or any range.</li>
-        <li><strong>Try the slider</strong> on Backgrounding Economics to see how the answer changes as the hay assumption does. It is an assumption of mine, not USDA data.</li>
+        <li><strong>Try the sliders</strong> on Backgrounding Economics: set the steer and the plan, and see what feeding it up would have added or cost in each past year. The gain per day and the hay it eats are my assumptions, not USDA data.</li>
         <li><strong>Hover over a chart</strong> to see exact values. On the comparison panels the hover lines up across charts.</li>
       </ol>
       <h2>Updates</h2>
       <ul class="updates">
+        <li><time datetime="2026-10-17">Oct 17, 2026</time>Review pass on every report. Market Trends is now Cattle Market Trends and the home page; the Overview page is gone. Backgrounding Economics is now a sell-now-or-feed-it calculator that replays each past year. There is a new Hay Market page. The reports link to the USDA pages the data comes from.</li>
         <li><time datetime="2026-10-13">Oct 13, 2026</time>Review pass on the dashboards: a weight class dropdown on Market Trends, clearer descriptions, and tidier pages.</li>
         <li><time datetime="2026-10-07">Oct 7, 2026</time>Five dashboards published under kennanmasters.com/ag-data/.</li>
         <li><time datetime="2026-10-06">Oct 6, 2026</time>Weekly rebuild set up: new data is published every Tuesday without any manual step.</li>

@@ -89,6 +89,7 @@
     </div>
 
     <div class="project-inner">
+      <p>The data comes from three <a href="https://mymarketnews.ams.usda.gov/">USDA Market News</a> reports (the <a href="https://mymarketnews.ams.usda.gov/viewReport/1895">Kansas Weekly Cattle Auction Summary</a>, the <a href="https://mymarketnews.ams.usda.gov/viewReport/3097">Kansas Direct Cattle report</a> and the <a href="https://mymarketnews.ams.usda.gov/viewReport/2885">Kansas Direct Hay report</a>) and the <a href="https://droughtmonitor.unl.edu/">U.S. Drought Monitor</a>.</p>
       <p>The site is static: Evidence queries the database when it builds and ships the results as files, so visitors never touch the database. There is no server to run. The only things that run on a schedule are the weekly loads and the weekly rebuild.</p>
 
       <h2 id="cost">Designed to cost almost nothing</h2>
@@ -113,7 +114,7 @@
 
       <h2 id="wrong">Things that went wrong</h2>
       <p><strong>GitHub's scheduler runs late.</strong> I first scheduled the rebuild for Monday, right after the loads. But scheduled runs in this repo start five to eight hours late and unpredictably, and the Monday loads finished at about 22:30 UTC. A fixed time right after the loads would sometimes run before the data was in. Moving the rebuild to Tuesday leaves plenty of margin.</p>
-      <p><strong>Drought percentages that stack.</strong> The Drought Monitor's columns are cumulative: "D1" is the share of Kansas in moderate drought or worse, and it already includes D2 and above. Stacking them as published would count the same land several times. The chart subtracts each level from the one before it to get separate bands.</p>
+      <p><strong>Drought percentages that stack.</strong> The <a href="https://droughtmonitor.unl.edu/">Drought Monitor</a>'s columns are cumulative: "D1" is the share of Kansas in moderate drought or worse, and it already includes D2 and above. Stacking them as published would count the same land several times. The chart subtracts each level from the one before it to get separate bands.</p>
       <p><strong>A volume line that jumps around.</strong> Weekly auction volume swings by about 60% from one week to the next, while the price and drought lines move 5 to 18%. Putting it next to them made the comparison unreadable. The panel uses an 8-week average instead.</p>
       <p><strong>A free database that was turned off.</strong> This project's database was on Supabase's free plan, too. When the project was paused and could not be restored, I recreated the tables on Neon from the schema file and reloaded the data from the public reports. The longer version of that story is in the <a href="/cattle-demo-build.html#wrong">ranch demo's write-up</a>.</p>
 
